@@ -1,0 +1,88 @@
+/* WRITE YOUR CSS CODE HERE */
+
+.profil_image{
+	margin-top: 15px;
+	margin-right: 170px;
+	margin-bottom: 20px;
+	float: right;
+	position : relative;
+}
+.personnal_data{
+	margin-top: 15px;
+	margin-left: 70px;
+	margin-bottom: 20px;
+	float: left;
+	position : relative;
+}
+.on_top{
+width: 100%;
+float : left;
+}
+.on_down{
+width: 100%;
+float : left;
+}
+
+a.update, a.delete, a.add, a.view, a.back {
+	font-size: 9pt;
+	color:#900;
+	font-wight:bold;
+	padding-left:20px;
+	text-decoration: none;
+}
+a.update {
+	background:url(images/update.png) left center no-repeat;
+}
+a.delete {
+	background:url(images/delete.png) left center no-repeat;
+}
+a.add {
+	background:url(images/add.png) left center no-repeat;
+}
+a.view {
+	background:url(images/view.png) left center no-repeat;
+}
+a.back {
+	background:url(images/prev.gif) left center no-repeat;
+}
+a.update:hover, a.delete:hover, a.add:hover, a.view:hover {
+	color:#000;
+}
+
+.pagination{
+	margin-bottom: 12px;
+	margin-top: 9px;
+}
+.active{
+    background-color: #DDEEFF;
+    border: 1px solid #BBDDFF;
+    color: #0072BC;
+    cursor: default;
+    margin-left: 10px;
+    padding: 2px 7px;
+    text-decoration: none;
+}
+
+div.paging {
+font-size:12px;
+margin: 13px 0 20px;
+}
+div.paging a {
+background-color: #F5F5F5;
+    border: 1px solid #EBEBEB;
+    color: #0072BC;
+    font-weight: normal;
+    margin-left: 10px;
+    padding: 2px 7px;
+    text-decoration: none;
+    width: 22px;
+}
+div.paging a:hover {
+    background-color: #DDEEFF;
+    border: 1px solid #BBDDFF;
+    color: #0072BC;
+}
+
+div.paging b {
+color:#900;
+}
