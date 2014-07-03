@@ -55,8 +55,8 @@ class Projet extends CI_Controller {
 		
 		// load view
 //		$this->load->view('personList', $projets);
-//	$this->template->layout('sidebar_projet', 'welcome_message', $data);
-		$this->template->layout('sidebar_projet','projet/projetList', $data);
+//	$this->template->layout('sidebar_default', 'welcome_message', $data);
+		$this->template->layout('sidebar_default','projet/projetList', $data);
 
 	}	
 
@@ -91,7 +91,7 @@ class Projet extends CI_Controller {
 		}else{
 		}
 		// load view
-		$this->template->layout('sidebar_projet', 'projet/projetEdit', $data);
+		$this->template->layout('sidebar_default', 'projet/projetEdit', $data);
         }
          
         function view($id)
@@ -99,13 +99,13 @@ class Projet extends CI_Controller {
             // set common properties
 		$data['title'] = ' Details';
 		$data['link_back'] = anchor('projet/index/','Back to list of projet',array('class'=>'back'));
-		
+		$data['link_edit'] = anchor('projet/update/'.$id,'Update',array('class'=>'update'));
 		// get param details
 		$data['projet'] = $this->model->get_by_id("projet", $id, "code_projet")->row();
 		
 		// load view
 		
-		$this->template->layout('sidebar_projet', 'projet/projetView', $data);
+		$this->template->layout('sidebar_default', 'projet/projetView', $data);
         }
         function update($id)
 	{
@@ -154,7 +154,7 @@ class Projet extends CI_Controller {
 		}
 		// load view
 		
-		$this->template->layout('sidebar_projet', 'projet/projetEdit', $data);
+		$this->template->layout('sidebar_default', 'projet/projetEdit', $data);
 		
         }
          
