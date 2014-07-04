@@ -1,6 +1,8 @@
 <div class="content">
-		<h1><?php if (isset($title)) echo $title; ?></h1>
-		<?php if (isset($message)) echo $message; ?>
+	<h3 class="tit"><?php echo $title; ?></h3>
+	<?php if(isset($message)){?>
+	<h4><p class="msg error"> <?php echo $message; ?></p></h4>
+	<?php  } ?>
 		<form method="post" action="<?php echo $action; ?>">
 		<div class="data">
 		<table>
