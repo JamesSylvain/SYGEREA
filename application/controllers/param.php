@@ -558,12 +558,14 @@ class Param extends CI_Controller {
 		// generate table data
 		$this->load->library('table');
 		$this->table->set_empty("&nbsp;");
-		$this->table->set_heading('No', 'Nom de la localite', 'Lieu Dit', 'Arrondissement', 'Population recensee', 'Taux d\'accroissement', 'Actions');
+		$this->table->set_heading('No', 'Nom de la localite', 'Lieu Dit', 'Arrondissement', 'Departement', 'Region', 'Population recensee', 'Taux d\'accroissement', 'Actions');
 		$i = 0 + $offset;
 		foreach ($localites as $localite)
 		{		
 		$arrondissement_name = $this->Param_model->getarrondissementname($localite->code_arrondissement);
-			$this->table->add_row(++$i, $localite->nom, $localite->lieudit, $arrondissement_name, $localite->population_recensee,  $localite->taux_de_croissance_de_la_populat, 
+		$adminstration = $this->Param_model->get_administrationby_localite($localite->code_arrondissement)->result();
+	//	var_dump($adminstration);exit;
+			$this->table->add_row(++$i, $localite->nom, $localite->lieudit, $arrondissement_name, $adminstration[0]->nom_dept, $adminstration[0]->nom_region, $localite->population_recensee,  $localite->taux_de_croissance_de_la_populat, 
 				anchor('param/view/'.$localite->code_de_la_localite.'/localites/code_de_la_localite',' ',array('class'=>'view')).' '.
 				anchor('param/updatelocalite/'.$localite->code_de_la_localite,' ',array('class'=>'update')).' '.
 				anchor('param/delete/'.$localite->code_de_la_localite,' ',array('class'=>'delete','onclick'=>"return confirm('Voulez vous supprimer cette localite?')"))

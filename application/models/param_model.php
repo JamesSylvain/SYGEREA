@@ -136,5 +136,13 @@ class Param_model extends CI_Model {
 		return $this->db->get('ouvrage');
 	}	
 	
+	function get_administrationby_localite($code_arrondissement){
+	
+		$this->db->select('libelle_region as nom_region, libelle_departement as nom_dept');
+		$this->db->from('region, departements,arrondissements');
+		$this->db->where('arrondissements.code_departement = departements.code_departement and region.code_region = departements.code_region');
+		$this->db->where('code_arrondissement', $code_arrondissement);
+		return $this->db->get();
+	}
 }
 ?>

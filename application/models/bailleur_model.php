@@ -3,6 +3,7 @@ class Bailleur_model extends CI_Model {
 	
 	private $bailleur = 'bailleur';
 	private $financer = 'financer';
+	private $rehabiliter = 'rehabiliter';
 	private $projet = 'projet';
 	
 	function __construct(){
@@ -20,6 +21,10 @@ class Bailleur_model extends CI_Model {
 	
 	function count_all_finance(){
 		return $this->db->count_all($this->financer);
+	}	
+	
+	function count_all_rehabilite(){
+		return $this->db->count_all($this->rehabiliter);
 	}
 	
 	function get_paged_list($limit = 10, $offset = 0){
@@ -34,6 +39,16 @@ class Bailleur_model extends CI_Model {
 		$this->db->where('bailleur.code_bailleur = financer.code_bailleur and projet.code_projet = financer.code_projet');
 		$this->db->limit($limit, $offset);
 		$this->db->order_by('annee_financement','desc');
+		return $this->db->get();
+	}	
+	
+	function get_paged_list_rehabilite($limit = 10, $offset = 0){
+	
+		$this->db->select('rehabiliter.*, entreprise.nom_de_l_entreprise as nom_entreprise');
+		$this->db->from('entreprise, rehabiliter, ouvrage');
+		$this->db->where('entreprise.code_entreprise = rehabiliter.code_entreprise and ouvrage.code_de_l_ouvrage = rehabiliter.code_de_l_ouvrage');
+		$this->db->limit($limit, $offset);
+		$this->db->order_by('code_rehabilite','desc');
 		return $this->db->get();
 	}
 	
