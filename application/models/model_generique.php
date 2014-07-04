@@ -71,8 +71,7 @@ class Model_generique extends CI_Model{
             
         }
         function getEntity($req){
-            return $this->db->get($req)->row();
-//           return $this->conversion($this->db->query($req));
+			return $this->db->query($req);
             
         }
         
