@@ -3,7 +3,7 @@
 <?php  } ?>
 
 <div id="page-heading">
-		<h3 class="tit">Liste des Rehabilitations effectues</h3>
+		<h3 class="tit">Liste des Rehabilitations effectuees</h3>
 </div>
 	<div class="data"><?php echo $table; ?></div>
 	<div class="paging"><?php echo $pagination; ?></div>

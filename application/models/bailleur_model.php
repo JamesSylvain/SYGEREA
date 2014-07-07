@@ -5,6 +5,8 @@ class Bailleur_model extends CI_Model {
 	private $financer = 'financer';
 	private $rehabiliter = 'rehabiliter';
 	private $projet = 'projet';
+	private $entreprise = 'entreprise';
+	private $ouvrage = 'ouvrage';
 	
 	function __construct(){
 		parent::__construct();
@@ -109,6 +111,8 @@ class Bailleur_model extends CI_Model {
 	function get_projetlist(){
 	
 		return $this->db->get($this->projet);
-	}	
+	}		
+	
+
 }
 ?>

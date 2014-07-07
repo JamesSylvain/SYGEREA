@@ -217,17 +217,13 @@ class Entreprise extends CI_Controller  {
 		// generate table data
 		$this->load->library('table');
 		$this->table->set_empty("&nbsp;");
-		$this->table->set_heading('No', 'Bailleur', 'Type Bailleur', 'Projet', 'Montant Financment', 'Annee rehabilitement',  'Actions');
+		$this->table->set_heading('No', 'Entreprise', 'Ouvrage rehabilite', 'Montant Rehabilitation', 'Date rehabilition', 'Duree des travaux', 'Actions');
 		$options= array(1=>'Etat', 2=>'Organisme international', 3=>'ONG', 4=>'Particuliers');
 		$i = 0 + $offset;
 		foreach ($rehabilites as $rehabilite)
 		{
-			foreach($options as $key=>$value){
-				if($rehabilite->type_entreprise == $key){
-					$type_entreprise = $value;
-				}
-			}
-			$this->table->add_row(++$i, $rehabilite->nom_entreprise, $type_entreprise, $rehabilite->nom_projet, $rehabilite->montant_rehabilitement, $rehabilite->annee_rehabilitement, 
+
+			$this->table->add_row(++$i, $rehabilite->nom_entreprise, $rehabilite->code_de_l_ouvrage, $rehabilite->cout_rehabilitation, $rehabilite->date_de_rehabilitation, $rehabilite->duree_de_rehabilitation.' Semaines', 
 				anchor('entreprise/view_rehabilite/'.$rehabilite->code_rehabilite,'details',array('class'=>'view')).' '.
 				anchor('entreprise/update_rehabilite/'.$rehabilite->code_rehabilite,'modifier',array('class'=>'update')).' '.
 				anchor('entreprise/delete_rehabilite/'.$rehabilite->code_rehabilite,'supprimer',array('class'=>'delete','onclick'=>"return confirm('voulez vous supprimer ce rehabilitement?')"))
@@ -246,25 +242,28 @@ class Entreprise extends CI_Controller  {
 			// set empty default form field values
 		$this->form_data = new stdclass;
 		$this->form_data->code_entreprise = '';
-		$this->form_data->code_projet = '';
-		$this->form_data->annee_rehabilitement = '';
-		$this->form_data->montant_rehabilitement = '';
+		$this->form_data->code_rehabilite = '';
+		$this->form_data->code_de_l_ouvrage = '';
+		$this->form_data->cout_rehabilitation = '';
+		$this->form_data->date_de_rehabilitation = '';
+		$this->form_data->duree_de_rehabilitation = '';
 		
 		// set common properties
-		$data['title'] = 'Ajouter un rehabilitement de projet :';
+		$data['title'] = 'Rehabilite un Ouvrage :';
 		//		$data['message'] = '';
-		$data['action'] = site_url('entreprise/rehabiliter_projet');
-		$data['entreprises'] = $this->Bailleur_model->get_entrepriselist()->result();
-		$data['projets'] = $this->Bailleur_model->get_projetlist()->result();
+		$data['action'] = site_url('entreprise/rehabiliter_ouvrage');
+		$data['entreprises'] = $this->Param_model->get_entrepriselist()->result();
+		$data['ouvrages'] = $this->Param_model->get_ouvragelist()->result();
 		
 			
 		if(isset($_POST['enregistrer'])){
 			
-			
 			// set validation properties
-			$this->form_validation->set_rules('code_entreprise', 'Nom du entreprise', 'trim|required');
-			$this->form_validation->set_rules('code_projet', 'Nom du projet', 'trim|required');
-			$this->form_validation->set_rules('montant_rehabilitement', 'Montant rehabilitement', 'trim|required');
+			$this->form_validation->set_rules('code_entreprise', 'Nom de l\'entreprise', 'trim|required');
+			$this->form_validation->set_rules('code_de_l_ouvrage', 'Nom de l\'ouvrage', 'trim|required');
+			$this->form_validation->set_rules('cout_rehabilitation', 'Montant rehabilitation', 'trim|required');
+			$this->form_validation->set_rules('date_de_rehabilitation', 'Date debut des travaux', 'trim|required');
+			$this->form_validation->set_rules('duree_de_rehabilitation', 'Duree de la rehabilitation', 'trim|required');
 			
 			//	$this->form_validation->set_message('required', '* Champ obligatoire');
 			
@@ -274,16 +273,17 @@ class Entreprise extends CI_Controller  {
 				
 				$data['message'] = 'les champs marques * sont obligatoire veuillez verifier votre formulaire!!';
 			}else{
-			//var_dump($_POST);exit;
+		//	var_dump($_POST);exit;
 
 				// save data
 				$rehabiliter = array('code_entreprise' => $this->input->post('code_entreprise'),
-										'code_projet' => $this->input->post('code_projet'),
-										'annee_rehabilitement' => $this->input->post('annee_rehabilitement'),
-										'montant_rehabilitement' => $this->input->post('montant_rehabilitement')
+										'code_de_l_ouvrage' => $this->input->post('code_de_l_ouvrage'),
+										'cout_rehabilitation' => $this->input->post('cout_rehabilitation'),
+										'date_de_rehabilitation' => $this->input->post('date_de_rehabilitation'),
+										'duree_de_rehabilitation' => $this->input->post('duree_de_rehabilitation')
 										);
 										
-				$idrehabilite = $this->Bailleur_model->save_rehabilite($rehabiliter);				
+				$idrehabilite = $this->Param_model->save_rehabilite($rehabiliter);				
 				$this->session->set_flashdata('succes', 'rehabilitement enregistre avec succes!!');
 				redirect('entreprise/rehabilitement/');
 
@@ -319,15 +319,9 @@ class Entreprise extends CI_Controller  {
 		$data['title'] = 'Details du rehabilitement ';
 		
 				// get rehabilite details
-		$data['rehabilite'] = $rehabilite = $this->Bailleur_model->get_by_code_rehabilite($code_rehabilite)->row();
+		$data['rehabilite'] = $rehabilite = $this->Param_model->get_by_code_rehabilite($code_rehabilite)->row();
 
-		$options = array(1=>'Etat', 2=>'Organisme international', 3=>'ONG', 4=>'Particuliers');
 		
-			foreach($options as $key=>$value){
-				if($rehabilite->type_entreprise == $key){
-					$data['rehabilite']->type_entreprise = $value;
-				}
-			}
 		// load view
 		
 		$this->template->layout('sidebar_projet', 'entreprise/rehabiliteView', $data);
@@ -335,30 +329,34 @@ class Entreprise extends CI_Controller  {
 	
 	function update_rehabilite($code_rehabilite){
 	
-		$rehabilite = $this->Bailleur_model->get_by_code_rehabilite($code_rehabilite)->row();
+		$rehabilite = $this->Param_model->get_by_code_rehabilite($code_rehabilite)->row();
 		
 				// set empty default form field values
 		$this->form_data = new stdclass;
+		$this->form_data->code_rehabilite = $rehabilite->code_rehabilite;
 		$this->form_data->code_entreprise = $rehabilite->code_entreprise;
-		$this->form_data->code_projet = $rehabilite->code_projet;
-		$this->form_data->annee_rehabilitement = $rehabilite->annee_rehabilitement;
-		$this->form_data->montant_rehabilitement = $rehabilite->montant_rehabilitement;
+		$this->form_data->code_de_l_ouvrage = $rehabilite->code_de_l_ouvrage;
+		$this->form_data->cout_rehabilitation = $rehabilite->cout_rehabilitation;
+		$this->form_data->date_de_rehabilitation = $rehabilite->date_de_rehabilitation;
+		$this->form_data->duree_de_rehabilitation = $rehabilite->duree_de_rehabilitation;
 		
 		// set common properties
 		$data['title'] = 'Modifier ce rehabilitement de projet :';
 		//		$data['message'] = '';
 		$data['action'] = site_url('entreprise/update_rehabilite/'.$code_rehabilite);
-		$data['entreprises'] = $this->Bailleur_model->get_entrepriselist()->result();
-		$data['projets'] = $this->Bailleur_model->get_projetlist()->result();
+		$data['entreprises'] = $this->Param_model->get_entrepriselist()->result();
+		$data['ouvrages'] = $this->Param_model->get_ouvragelist()->result();
 		
 			
 		if(isset($_POST['enregistrer'])){
 			
 			
 			// set validation properties
-			$this->form_validation->set_rules('code_entreprise', 'Nom du entreprise', 'trim|required');
-			$this->form_validation->set_rules('code_projet', 'Nom du projet', 'trim|required');
-			$this->form_validation->set_rules('montant_rehabilitement', 'Montant rehabilitement', 'trim|required');
+			$this->form_validation->set_rules('code_entreprise', 'Nom de l\'entreprise', 'trim|required');
+			$this->form_validation->set_rules('code_de_l_ouvrage', 'Nom de l\'ouvrage', 'trim|required');
+			$this->form_validation->set_rules('cout_rehabilitation', 'Montant rehabilitation', 'trim|required');
+			$this->form_validation->set_rules('date_de_rehabilitation', 'Date debut des travaux', 'trim|required');
+			$this->form_validation->set_rules('duree_de_rehabilitation', 'Duree de la rehabilitation', 'trim|required');
 			
 			//	$this->form_validation->set_message('required', '* Champ obligatoire');
 			
@@ -370,13 +368,15 @@ class Entreprise extends CI_Controller  {
 			}else{
 
 				// save data
-				$rehabiliter = array('code_entreprise' => $this->input->post('code_entreprise'),
-										'code_projet' => $this->input->post('code_projet'),
-										'annee_rehabilitement' => $this->input->post('annee_rehabilitement'),
-										'montant_rehabilitement' => $this->input->post('montant_rehabilitement')
+				$rehabiliter = array('code_rehabilite' => $this->input->post('code_rehabilite'),
+										'code_entreprise' => $this->input->post('code_entreprise'),
+										'code_de_l_ouvrage' => $this->input->post('code_de_l_ouvrage'),
+										'cout_rehabilitation' => $this->input->post('cout_rehabilitation'),
+										'date_de_rehabilitation' => $this->input->post('date_de_rehabilitation'),
+										'duree_de_rehabilitation' => $this->input->post('duree_de_rehabilitation')
 										);
 										
-				$this->Bailleur_model->update_rehabilite($code_rehabilite, $rehabiliter);				
+				$this->Param_model->update_rehabilite($code_rehabilite, $rehabiliter);				
 				$this->session->set_flashdata('succes', 'rehabilitement modifier avec succes!!');
 				redirect('entreprise/rehabilitement/');
 

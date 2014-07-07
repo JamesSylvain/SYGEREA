@@ -5,6 +5,7 @@ class Param_model extends CI_Model {
 	private $departements= 'departements';
 	private $arrondissements= 'arrondissements';
 	private $localites= 'localites';
+	private $entreprise= 'entreprise';
 	
 	function __construct(){
 		parent::__construct();
@@ -43,6 +44,11 @@ class Param_model extends CI_Model {
 	function get_by_id($idContrib){
 		$this->db->where('idContrib', $idContrib);
 		return $this->db->get($this->param);
+	}		
+	
+	function get_by_code_rehabilite($code_rehabilite){
+		$this->db->where('code_rehabilite', $code_rehabilite);
+		return $this->db->get('rehabiliter');
 	}		
 	
 	function get_region($code_region){
@@ -86,9 +92,19 @@ class Param_model extends CI_Model {
 		return $this->db->insert_id();
 	}
 	
+	function save_rehabilite($rehabilite){
+		$this->db->insert('rehabiliter', $rehabilite);
+		return $this->db->insert_id();
+	}
+	
 	function update($name_code, $code_element, $param, $table){
 		$this->db->where($name_code, $code_element);
 		$this->db->update($table, $param);
+	}	
+	
+	function update_rehabilite($code_rehabilite, $rehabiliter){
+		$this->db->where('code_rehabilite', $code_rehabilite);
+		$this->db->update('rehabiliter', $rehabiliter);
 	}
 	
 	function delete($id, $name_code, $table){
@@ -99,6 +115,11 @@ class Param_model extends CI_Model {
 	function getregionname($code_region){
 		$this->db->where('code_region', $code_region);
 		return $this->db->get('region')->row()->libelle_region;
+	}	
+	
+	function get_entreprisename($code_entreprise){
+		$this->db->where('code_entreprise', $code_entreprise);
+		return $this->db->get('entreprise')->row()->nom_de_l_entreprise;
 	}	
 	
 	function getdepartementname($code_departement){
@@ -135,6 +156,11 @@ class Param_model extends CI_Model {
 	
 		return $this->db->get('ouvrage');
 	}	
+	
+	function get_entrepriselist(){
+	
+		return $this->db->get($this->entreprise);
+	}		
 	
 	function get_administrationby_localite($code_arrondissement){
 	
