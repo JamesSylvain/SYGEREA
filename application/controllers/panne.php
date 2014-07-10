@@ -17,6 +17,12 @@ class Panne extends CI_Controller {
 		
 		// load model
 		$this->load->model('Panne_model','',TRUE);
+		
+		if (!$this->ion_auth->logged_in())
+		{
+			//redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
 	}
 	
 	function index($offset = 0)

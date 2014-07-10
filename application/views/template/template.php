@@ -17,6 +17,7 @@
 	
 		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url() . 'assets/css/jsDatePick_ltr.min.css'; ?>" />
 		<script type="text/javascript" src="<?php echo base_url() . 'assets/js/jsDatePick.min.1.3.js'; ?>"></script>	
+		<script type="text/javascript" src="<?php echo base_url() . 'assets/js/date_heure.js'; ?>"></script>	
 
 	<script type="text/javascript" src="<?php echo base_url() . 'assets/js/jquery.js'; ?>"></script>
 	<script type="text/javascript" src="<?php echo base_url() . 'assets/js/switcher.js'; ?>"></script>
@@ -138,7 +139,7 @@
 
 		</p>
 
-		<p class="f-right">User: <strong><a href="#">Administrteur</a></strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong><a href="#" id="logout">Log out</a></strong></p>
+		<p class="f-right">User: <strong><a href="#">	<?php $user = $this->ion_auth->user()->row(); echo $user->username;?></a></strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong><a href="<?php echo base_url().'auth/logout'?>" id="logout">deconnexion</a></strong></p>
 
 	</div> <!--  /tray -->
 
@@ -153,8 +154,10 @@
 			<li><a href="#"><span>Ouvrages</span></a></li>
 			<li><a href="#"><span>Recherche</span></a></li>
 			<li><a href="#"><span>Imprimer</span></a></li>
-			<li><a href="#"><span>Utilisateurs</span></a></li>
+			<li><a href="<?php echo base_url().'auth/'?>"><span>Utilisateurs</span></a></li>
 			<li><a href="#"><span>Parametrages</span></a></li>
+			<span style="float:right; font-weight:bold" id="date_heure"></span>
+			<script type="text/javascript">window.onload = date_heure('date_heure');</script>
 		</ul>
 
 	</div> <!-- /header -->
@@ -196,8 +199,6 @@
 
 				<!-- Create a new project -->
 				<p id="btn-create" class="box"><a href="#"><span>Nouvel Ouvrage</span></a></p>
-				<p id="btn-create" class="box"><a href="#"><span>Nouveau Puit</span></a></p>
-
 			</div> <!-- /padding -->
 		<?php echo $sidebar; ?>
 

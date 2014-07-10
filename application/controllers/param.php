@@ -16,6 +16,11 @@ class Param extends CI_Controller {
 		// load helper
 		$this->load->helper('url');
 		
+		if (!$this->ion_auth->logged_in())
+		{
+			//redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
 	}
 	
 	function index(){
