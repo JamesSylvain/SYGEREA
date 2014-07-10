@@ -82,3 +82,12 @@ CREATE TABLE "login_attempts_fails" (
   PRIMARY KEY("id"),
   CONSTRAINT "check_id" CHECK(id >= 0)
 );
+
+CREATE TABLE "user_online" (
+    "id" SERIAL NOT NULL,
+    "ip_address" varchar(15),
+    "login" varchar(100) NOT NULL,
+    "time" int,
+  PRIMARY KEY("id"),
+  CONSTRAINT "check_id" CHECK(id >= 0)
+);

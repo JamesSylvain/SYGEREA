@@ -10,7 +10,7 @@
   <title>Connexion</title>
 </head>
 <body>
-<MARQUEE><?php echo lang('login_subheading');?></MARQUEE>
+<span><?php echo lang('login_subheading');?></span>
 
 <div><?php echo $message;?></div>
   <div class="login">

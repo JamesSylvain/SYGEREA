@@ -87,6 +87,7 @@ class Auth extends CI_Controller {
 									'message'=>$this->ion_auth->messages(),
 				);					
 				$this->save_login_attempt(1, $info);
+				$this->save_connect();
 				redirect('/param/region', 'refresh');
 			}
 			else
@@ -134,8 +135,9 @@ class Auth extends CI_Controller {
 		$this->data['title'] = "Logout";
 
 		//log the user out
+		$this->delete_connect();
 		$logout = $this->ion_auth->logout();
-
+		
 		//redirect them to the login page
 		$this->session->set_flashdata('message', $this->ion_auth->messages());
 		redirect('auth/login', 'refresh');
@@ -837,6 +839,27 @@ class Auth extends CI_Controller {
 			$id = $this->db->insert('login_attempts_succes', $info);
 		}
 	
+	}
+	
+	function save_connect(){
+		$user = array('id'=>$this->session->userdata('user_id'),
+							'login'=>$this->session->userdata('username'),
+							'ip_address' => $this->input->ip_address(),
+							'time' =>time());
+		$id = $this->db->insert('user_online', $user);
+	}	
+	
+	function delete_connect(){
+		$user_id = $this->session->userdata('user_id');
+		$this->db->where('id', $user_id);
+		$this->db->delete('user_online');
+	}
+	
+	function user_online(){
+		$this->data['titre'] = 'Utilisateur connectes';
+		$this->db->order_by('time','desc');
+		$this->data['connexions'] = $this->db->get('user_online')->result();
+		$this->template->layout('sidebar_admin', 'auth/user_online', $this->data);
 	}
 	
 	function historique_connexion($type){
