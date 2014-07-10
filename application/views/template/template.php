@@ -154,7 +154,9 @@
 			<li><a href="#"><span>Ouvrages</span></a></li>
 			<li><a href="#"><span>Recherche</span></a></li>
 			<li><a href="#"><span>Imprimer</span></a></li>
-			<li><a href="<?php echo base_url().'auth/'?>"><span>Utilisateurs</span></a></li>
+			<?php if($this->ion_auth->is_admin()){?>
+				<li><a href="<?php echo base_url().'auth/'?>"><span>Utilisateurs</span></a></li>
+			<?php } ?>
 			<li><a href="#"><span>Parametrages</span></a></li>
 			<span style="float:right; font-weight:bold" id="date_heure"></span>
 			<script type="text/javascript">window.onload = date_heure('date_heure');</script>

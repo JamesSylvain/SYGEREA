@@ -380,7 +380,8 @@ class Auth extends CI_Controller {
 			$this->data['csrf'] = $this->_get_csrf_nonce();
 			$this->data['user'] = $this->ion_auth->user($id)->row();
 
-			$this->_render_page('auth/deactivate_user', $this->data);
+		//	$this->_render_page('auth/deactivate_user', $this->data);
+			$this->template->layout('sidebar_admin', 'auth/deactivate_user', $this->data);
 		}
 		else
 		{
@@ -626,7 +627,8 @@ class Auth extends CI_Controller {
 			'type' => 'password'
 		);
 
-		$this->_render_page('auth/edit_user', $this->data);
+	//	$this->_render_page('auth/edit_user', $this->data);
+		$this->template->layout('sidebar_admin', 'auth/edit_user', $this->data);
 	}
 
 	// create a new group
@@ -651,7 +653,7 @@ class Auth extends CI_Controller {
 				// check to see if we are creating the group
 				// redirect them back to the admin page
 				$this->session->set_flashdata('message', $this->ion_auth->messages());
-				redirect("auth", 'refresh');
+				redirect("auth/groups", 'refresh');
 			}
 		}
 		else
@@ -714,7 +716,7 @@ class Auth extends CI_Controller {
 				{
 					$this->session->set_flashdata('message', $this->ion_auth->errors());
 				}
-				redirect("auth", 'refresh');
+				redirect("auth/groups", 'refresh');
 			}
 		}
 
@@ -737,7 +739,8 @@ class Auth extends CI_Controller {
 			'value' => $this->form_validation->set_value('group_description', $group->description),
 		);
 
-		$this->_render_page('auth/edit_group', $this->data);
+	//	$this->_render_page('auth/edit_group', $this->data);
+		$this->template->layout('sidebar_admin', 'auth/edit_group', $this->data);
 	}
 
 
@@ -773,6 +776,41 @@ class Auth extends CI_Controller {
 		$view_html = $this->load->view($view, $this->viewdata, $render);
 
 		if (!$render) return $view_html;
+	}
+	
+	function groups(){
+		$this->data['message'] = $this->session->flashdata('message');
+		$this->data['groups'] = $this->ion_auth->groups()->result();
+		$this->template->layout('sidebar_admin', 'auth/grous_index', $this->data);
+	}
+	
+	function delete_group($group_id){
+	  
+	  $group_delete = $this->ion_auth->delete_group($group_id);
+
+        if(!$group_delete)
+        {
+        	$view_errors = $this->ion_auth->messages();
+      	}
+      	else
+      	{
+      		$this->session->set_flashdata('message', 'groupe supprime avec succes');
+			$this->data['message'] = $this->session->flashdata('message');
+			redirect("auth/groups", 'refresh');
+      	}
+	}
+	
+	function myaccount(){
+		$this->data['titre'] = 'Mon compte';
+		$this->data['user'] = $this->ion_auth->user()->row();
+		$this->template->layout('sidebar_admin', 'auth/view_user', $this->data);
+	}	
+	
+	function view_user($user_id){
+	
+		$this->data['titre'] = 'Detail du compte';
+		$this->data['user'] = $this->ion_auth->user($user_id)->row();
+		$this->template->layout('sidebar_admin', 'auth/view_user', $this->data);
 	}
 
 }

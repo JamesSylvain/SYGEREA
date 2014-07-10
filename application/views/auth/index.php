@@ -23,7 +23,9 @@
                 <?php endforeach?>
 			</td>
 			<td><?php echo ($user->active) ? anchor("auth/deactivate/".$user->id, lang('index_active_link')) : anchor("auth/activate/". $user->id, lang('index_inactive_link'));?></td>
-			<td><?php echo anchor("auth/edit_user/".$user->id, 'Edit') ;?></td>
+			<td><?php echo anchor('auth/view_user/'.$user->id,' ',array('class'=>'view', 'title'=>'detail de cet utilisateur')).' '.
+								anchor('auth/edit_user/'.$user->id,' ',array('class'=>'update', 'title'=>'modifier cet utilisateur')).' '.
+								anchor('auth/delete_user/'.$user->id,' ',array('class'=>'delete','onclick'=>"return confirm('voulez vous supprimer cet utilisateur?')", 'title'=>'supprimer cet utilisateur'));?></td>
 		</tr>
 	<?php endforeach;?>
 </table>
