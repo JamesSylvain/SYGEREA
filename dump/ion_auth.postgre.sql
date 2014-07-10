@@ -62,3 +62,23 @@ CREATE TABLE "login_attempts" (
   PRIMARY KEY("id"),
   CONSTRAINT "check_id" CHECK(id >= 0)
 );
+
+CREATE TABLE "login_attempts_succes" (
+    "id" SERIAL NOT NULL,
+    "ip_address" varchar(15),
+    "login" varchar(100) NOT NULL,
+    "message" varchar(100) NOT NULL,
+    "time" int,
+  PRIMARY KEY("id"),
+  CONSTRAINT "check_id" CHECK(id >= 0)
+);
+
+CREATE TABLE "login_attempts_fails" (
+    "id" SERIAL NOT NULL,
+    "ip_address" varchar(15),
+    "login" varchar(100) NOT NULL,
+    "message" varchar(100) NOT NULL,
+    "time" int,
+  PRIMARY KEY("id"),
+  CONSTRAINT "check_id" CHECK(id >= 0)
+);

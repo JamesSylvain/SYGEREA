@@ -56,7 +56,7 @@ class Auth extends CI_Controller {
 
 	//log the user in
 	function login()
-	{	
+	{
 		if ($this->ion_auth->logged_in())
 		{
 			//redirect them to the login page
@@ -79,6 +79,14 @@ class Auth extends CI_Controller {
 				//if the login is successful
 				//redirect them back to the home page
 				$this->session->set_flashdata('message', $this->ion_auth->messages());
+				
+				//save conexion attempt
+				$info = array('ip_address'=>$this->input->ip_address(),
+									'login'=>$this->input->post('identity'),
+									'time'=>time(),
+									'message'=>$this->ion_auth->messages(),
+				);					
+				$this->save_login_attempt(1, $info);
 				redirect('/param/region', 'refresh');
 			}
 			else
@@ -86,6 +94,15 @@ class Auth extends CI_Controller {
 				//if the login was un-successful
 				//redirect them back to the login page
 				$this->session->set_flashdata('message', $this->ion_auth->errors());
+				
+				//save connexion attempt
+				$info = array('ip_address'=>$this->input->ip_address(),
+					'login'=>$this->input->post('identity'),
+					'time'=>time(),
+					'message'=>$this->ion_auth->errors(),
+				);
+				
+				$this->save_login_attempt(0, $info);
 				redirect('auth/login', 'refresh'); //use redirects instead of loading views for compatibility with MY_Controller libraries
 			}
 		}
@@ -812,5 +829,25 @@ class Auth extends CI_Controller {
 		$this->data['user'] = $this->ion_auth->user($user_id)->row();
 		$this->template->layout('sidebar_admin', 'auth/view_user', $this->data);
 	}
-
+	
+	function save_login_attempt($type, $info=array()){
+		if($type == 0){ // en cas d'echec de connexion
+			$id = $this->db->insert('login_attempts_fails', $info);
+		}else{
+			$id = $this->db->insert('login_attempts_succes', $info);
+		}
+	
+	}
+	
+	function historique_connexion($type){
+		if($type == 0){
+			$this->data['titre'] = 'Historique de connexion echouees';
+			$this->db->order_by('id','desc');
+			$this->data['connexions'] = $this->db->get('login_attempts_fails')->result();
+		}else{
+			$this->data['titre'] = 'Historique de connexion reussies';
+			$this->data['connexions'] = $this->db->get('login_attempts_succes')->result();
+		}
+		$this->template->layout('sidebar_admin', 'auth/historique', $this->data);
+	}
 }

@@ -180,7 +180,7 @@
 				<!-- Search -->
 				<form action="#" method="get" id="search">
 					<fieldset>
-						<legend>Rechercher</legend>
+						<legend>Rechercher ouvrage</legend>
 
 						<p><input type="text" size="17" name="" class="input-text" />&nbsp;<input type="submit" value="OK" class="input-submit-02" /><br />
 						<a href="javascript:toggle('search-options');" class="ico-drop">Recherche avance</a></p>
