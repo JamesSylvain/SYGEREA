@@ -91,3 +91,13 @@ CREATE TABLE "user_online" (
   PRIMARY KEY("id"),
   CONSTRAINT "check_id" CHECK(id >= 0)
 );
+
+CREATE TABLE ci_sessions
+(
+  session_id character varying(40) NOT NULL DEFAULT '0'::character varying,
+  ip_address character varying(16) NOT NULL DEFAULT '0'::character varying,
+  user_agent character varying(150) NOT NULL,
+  last_activity integer NOT NULL DEFAULT 0,
+  user_data text NOT NULL,
+  CONSTRAINT ci_sessions_pkey PRIMARY KEY (session_id)
+);

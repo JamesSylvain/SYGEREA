@@ -87,7 +87,7 @@ class Auth extends CI_Controller {
 									'message'=>$this->ion_auth->messages(),
 				);					
 				$this->save_login_attempt(1, $info);
-				$this->save_connect();
+			//	$this->save_connect();
 				redirect('/param/region', 'refresh');
 			}
 			else
@@ -135,7 +135,7 @@ class Auth extends CI_Controller {
 		$this->data['title'] = "Logout";
 
 		//log the user out
-		$this->delete_connect();
+	//	$this->delete_connect();
 		$logout = $this->ion_auth->logout();
 		
 		//redirect them to the login page
@@ -798,13 +798,22 @@ class Auth extends CI_Controller {
 	}
 	
 	function groups(){
+		if (!$this->ion_auth->logged_in())
+		{
+			//redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
 		$this->data['message'] = $this->session->flashdata('message');
 		$this->data['groups'] = $this->ion_auth->groups()->result();
 		$this->template->layout('sidebar_admin', 'auth/grous_index', $this->data);
 	}
 	
 	function delete_group($group_id){
-	  
+	  	if (!$this->ion_auth->logged_in())
+		{
+			//redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
 	  $group_delete = $this->ion_auth->delete_group($group_id);
 
         if(!$group_delete)
@@ -820,13 +829,22 @@ class Auth extends CI_Controller {
 	}
 	
 	function myaccount(){
+		if (!$this->ion_auth->logged_in())
+		{
+			//redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
 		$this->data['titre'] = 'Mon compte';
 		$this->data['user'] = $this->ion_auth->user()->row();
 		$this->template->layout('sidebar_admin', 'auth/view_user', $this->data);
 	}	
 	
 	function view_user($user_id){
-	
+		if (!$this->ion_auth->logged_in())
+		{
+			//redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
 		$this->data['titre'] = 'Detail du compte';
 		$this->data['user'] = $this->ion_auth->user($user_id)->row();
 		$this->template->layout('sidebar_admin', 'auth/view_user', $this->data);
@@ -841,28 +859,38 @@ class Auth extends CI_Controller {
 	
 	}
 	
-	function save_connect(){
+	/*function save_connect(){
 		$user = array('id'=>$this->session->userdata('user_id'),
 							'login'=>$this->session->userdata('username'),
 							'ip_address' => $this->input->ip_address(),
 							'time' =>time());
 		$id = $this->db->insert('user_online', $user);
-	}	
+	}
 	
 	function delete_connect(){
 		$user_id = $this->session->userdata('user_id');
 		$this->db->where('id', $user_id);
 		$this->db->delete('user_online');
-	}
+	}*/
 	
 	function user_online(){
+		if (!$this->ion_auth->logged_in())
+		{
+			//redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
 		$this->data['titre'] = 'Utilisateur connectes';
-		$this->db->order_by('time','desc');
-		$this->data['connexions'] = $this->db->get('user_online')->result();
+	//	$this->db->order_by('time','desc');
+		$this->data['connexions'] = $this->db->get('ci_sessions')->result();
 		$this->template->layout('sidebar_admin', 'auth/user_online', $this->data);
 	}
 	
 	function historique_connexion($type){
+		if (!$this->ion_auth->logged_in())
+		{
+			//redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
 		if($type == 0){
 			$this->data['titre'] = 'Historique de connexion echouees';
 			$this->db->order_by('id','desc');
