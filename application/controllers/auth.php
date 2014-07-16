@@ -880,8 +880,25 @@ class Auth extends CI_Controller {
 			redirect('auth/login', 'refresh');
 		}
 		$this->data['titre'] = 'Utilisateur connectes';
-	//	$this->db->order_by('time','desc');
-		$this->data['connexions'] = $this->db->get('ci_sessions')->result();
+
+	$date = explode(' ', date('d-m-Y H:i:s', time() - (6 * 60)));
+
+	$details1 = explode('-', $date[0]);
+	$details2 = explode(':', $date[1]);
+	
+	 $heure = $details2[0];
+	 $minute = $details2[1];
+	 $seconde = $details2[2];
+	 $jour = $details1[0];
+	 $mois = $details1[1];
+	 $annee = $details1[2];
+
+	$date_online = mktime($heure, $minute, $seconde, $mois, $jour, $annee); //echo '<br />';
+	
+		$query = $this->db->query('SELECT *  FROM  ci_sessions WHERE last_activity >= '.$date_online.'');
+	//	$query = $this->db->query('SELECT *  FROM  ci_sessions');
+		$this->data['connexions'] = $query->result();
+	//	var_dump($this->data['connexions']);
 		$this->template->layout('sidebar_admin', 'auth/user_online', $this->data);
 	}
 	

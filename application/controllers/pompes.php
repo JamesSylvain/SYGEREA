@@ -72,8 +72,10 @@ class Pompes extends CI_Controller {
      */
     function update($id = 0) {
 
-        $pompe = $this->model->get_by_id('pompes', $id, "code_pompe")->row();        
-        $ouvrage = $this->model->getEntity('select ouvrage.* from pompes,ouvrage where pompes.code_de_l_ouvrage=ouvrage.code_de_l_ouvrage and pompes.code_pompe=' . $pompe->code_pompe)->row();
+        $pompe = $this->model->get_by_id('pompes', $id, "code_pompe")->row();
+        $ouvrage = $this->model->getEntity('select ouvrage.* from ouvrage,forages_ou_puits 
+            where ouvrage.code_de_l_ouvrage=forages_ou_puits.code_de_l_ouvrage and 
+            forages_ou_puits.code_forage_puit = ' . $pompe->code_forage_puit)->row();
 
         // set empty default form field values
         $this->form_data = new stdclass;
@@ -91,7 +93,7 @@ class Pompes extends CI_Controller {
 
 
         $data['projets'] = $this->model->list_all('projet')->result();
-        $data['ouvrages'] = $this->model->list_all('forages_ou_puits')->result();
+        $data['ouvrages'] = $data['ouvrages'] = $this->model->getEntities('select ouvrage.* from forages_ou_puits,ouvrage where forages_ou_puits.code_de_l_ouvrage=ouvrage.code_de_l_ouvrage')->result();
         $data['title'] = 'Modifier la pompe :';
         //		$data['message'] = '';
         $data['action'] = site_url('pompes/update/' . $pompe->code_pompe);
@@ -116,11 +118,10 @@ class Pompes extends CI_Controller {
                 $data['message'] = 'les champs marques * sont obligatoire veuillez verifier votre formulaire!!';
             } else {
                 // save data
-                
+                $source = $this->model->getEntity("SELECT * FROM forages_ou_puits WHERE code_de_l_ouvrage=" . $this->input->post('code_de_l_ouvrage') . ";")->row();
                 $region = array(
                     'code_pompe' => $id,
-//                    $pompe = array(
-                    'code_de_l_ouvrage' => $this->input->post('code_de_l_ouvrage'),
+                    'code_forage_puit' => $source->code_forage_puit,
                     'marque_de_la_pompe' => $this->input->post('marque_de_la_pompe'),
                     'type_de_pompe' => $this->input->post('type_de_pompe'),
                     'diametre' => $this->input->post('diametre'),
@@ -133,7 +134,6 @@ class Pompes extends CI_Controller {
                     'etat_de_la_pompe' => $this->input->post('etat_de_la_pompe')
                 );
                 $this->model->update('pompes', 'code_pompe', $id, $region);
-                
                 $this->session->set_flashdata('succes', 'pompe modifier avec succes!!');
                 redirect('pompes/index/');
             }
@@ -141,7 +141,6 @@ class Pompes extends CI_Controller {
             
         }
         // load view
-
         $this->template->layout('sidebar_default', 'pompes/pompeEdit', $data);
     }
 
@@ -163,7 +162,7 @@ class Pompes extends CI_Controller {
         $this->form_data->consommation_de_la_pompe = "";
         $this->form_data->etat_de_la_pompe = "";
 
-        $data['ouvrages'] = $this->model->list_all('forages_ou_puits')->result();
+        $data['ouvrages'] = $this->model->getEntities('select ouvrage.* from forages_ou_puits,ouvrage where forages_ou_puits.code_de_l_ouvrage=ouvrage.code_de_l_ouvrage')->result();
         $data['title'] = 'Nouvelle Pompe :';
         //		$data['message'] = '';
         $data['action'] = site_url('pompes/add/');
@@ -188,9 +187,9 @@ class Pompes extends CI_Controller {
                 $data['message'] = 'les champs marques * sont obligatoire veuillez verifier votre formulaire!!';
             } else {
                 // save data
-
+                $source = $this->model->getEntity("SELECT * FROM forages_ou_puits WHERE code_de_l_ouvrage=" . $this->input->post('code_de_l_ouvrage') . ";")->row();
                 $pompe = array(
-                    'code_de_l_ouvrage' => $this->input->post('code_de_l_ouvrage'),
+                    'code_forage_puit' => $source->code_forage_puit,
                     'marque_de_la_pompe' => $this->input->post('marque_de_la_pompe'),
                     'type_de_pompe' => $this->input->post('type_de_pompe'),
                     'diametre' => $this->input->post('diametre'),
@@ -222,8 +221,13 @@ class Pompes extends CI_Controller {
         $data['link_edit'] = anchor('pompes/update/' . $id, 'Update', array('class' => 'update'));
         // get param details
         $pompe = $this->model->get_by_id('pompes', $id, "code_pompe")->row();
-        $projet = $this->model->getEntity('select projet.* from projet,ouvrage where projet.code_projet=ouvrage.code_projet and ouvrage.code_de_l_ouvrage=' . $pompe->code_de_l_ouvrage)->row();
-        $ouvrage = $this->model->getEntity('select ouvrage.* from pompes,ouvrage where pompes.code_de_l_ouvrage=ouvrage.code_de_l_ouvrage and pompes.code_pompe=' . $id)->row();
+        $projet = $this->model->getEntity('select projet.* from projet,ouvrage,forages_ou_puits 
+            where (projet.code_projet=ouvrage.code_projet and 
+            ouvrage.code_de_l_ouvrage=forages_ou_puits.code_de_l_ouvrage and 
+            forages_ou_puits.code_forage_puit = ' . $pompe->code_forage_puit . ')')->row();
+        $ouvrage = $this->model->getEntity('select ouvrage.* from ouvrage,forages_ou_puits 
+            where ouvrage.code_de_l_ouvrage=forages_ou_puits.code_de_l_ouvrage and 
+            forages_ou_puits.code_forage_puit = ' . $pompe->code_forage_puit)->row();
 
         $data['pompe'] = $pompe;
         $data['projet'] = $projet;
