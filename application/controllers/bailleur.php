@@ -212,6 +212,48 @@ class Bailleur extends CI_Controller {
         // load view
 
         $this->template->layout('sidebar_projet', 'bailleur/financeList', $data);
+    }    
+	
+	function financementOuvrage($offset = 0) {
+        // offset
+        $data['$id_fin_projet'] = 'submenu-active';
+        $uri_segment = 3;
+        $offset = $this->uri->segment($uri_segment);
+
+        // load data
+        $finances = $this->Bailleur_model->get_paged_list_finance_ouvrage($this->limit, $offset)->result();
+
+        // generate pagination
+        $this->load->library('pagination');
+        $config['base_url'] = site_url('bailleur/financementOuvrage/');
+        $config['total_rows'] = $this->Bailleur_model->count_all_finance_ouvrage();
+        $config['per_page'] = $this->limit;
+        $config['uri_segment'] = $uri_segment;
+        $this->pagination->initialize($config);
+        $data['pagination'] = $this->pagination->create_links();
+
+        // generate table data
+        $this->load->library('table');
+        $this->table->set_empty("&nbsp;");
+        $this->table->set_heading('No', 'Bailleur', 'Type Bailleur', 'Ouvrage', 'Montant Financment', 'Annee Financement', 'Actions');
+        $options = array(1 => 'Etat', 2 => 'Organisme international', 3 => 'ONG', 4 => 'Particuliers');
+        $i = 0 + $offset;
+        foreach ($finances as $finance) {
+            foreach ($options as $key => $value) {
+                if ($finance->type_bailleur == $key) {
+                    $type_bailleur = $value;
+                }
+            }
+            $this->table->add_row(++$i, $finance->nom_bailleur, $type_bailleur, $finance->code_ouvrage, $finance->montant_financement, $finance->annee_financement, anchor('bailleur/view_finance/' . $finance->code_finance, 'details', array('class' => 'view')) . ' ' .
+                    anchor('bailleur/update_finance/' . $finance->code_finance, 'modifier', array('class' => 'update')) . ' ' .
+                    anchor('bailleur/delete_finance/' . $finance->code_finance, 'supprimer', array('class' => 'delete', 'onclick' => "return confirm('voulez vous supprimer ce financement?')"))
+            );
+        }
+        $data['table'] = $this->table->generate();
+
+        // load view
+
+        $this->template->layout('sidebar_projet', 'bailleur/financeouvrageList', $data);
     }
 
     function financer_projet() {
@@ -267,6 +309,65 @@ class Bailleur extends CI_Controller {
         // load view
 
         $this->template->layout('sidebar_projet', 'bailleur/financeEdit', $data);
+    }   
+
+	function financer_ouvrage() {
+        $data['$id_fin_projet'] = 'submenu-active';
+        // set empty default form field values
+        $this->form_data = new stdclass;
+        $this->form_data->code_bailleur = '';
+        $this->form_data->code_projet = '';
+        $this->form_data->annee_financement = '';
+        $this->form_data->montant_financement = '';
+
+        // set common properties
+        $data['title'] = 'Ajouter un Financement d\'ouvrage :';
+        //		$data['message'] = '';
+        $data['action'] = site_url('bailleur/financer_ouvrage');
+        $data['bailleurs'] = $this->Bailleur_model->get_bailleurlist()->result();
+        $data['regions'] = $this->Param_model->get_regionlist()->result();
+		$data['departements'] = $this->Param_model->get_departementlist()->result();
+		$data['arrondissements'] = $this->Param_model->get_arrondissementlist()->result();
+		$data['localites'] = $this->Param_model->get_localitelist()->result();
+		$data['ouvrages'] = $this->Param_model->get_ouvragelist()->result();
+
+
+        if (isset($_POST['enregistrer'])) {
+
+
+            // set validation properties
+            $this->form_validation->set_rules('code_bailleur', 'Nom du bailleur', 'trim|required');
+            $this->form_validation->set_rules('code_ouvrage', 'Nom du projet', 'trim|required');
+            $this->form_validation->set_rules('montant_financement', 'Montant financement', 'trim|required');
+
+            //	$this->form_validation->set_message('required', '* Champ obligatoire');
+            // run validation
+            if ($this->form_validation->run() == FALSE) {
+
+                $data['message'] = 'les champs marques * sont obligatoire veuillez verifier votre formulaire!!';
+            } elseif ($this->verify_duplicate_finance_ouvrage($_POST)) {
+                $this->session->set_flashdata('warning', 'ce financement existe deja !!');
+                redirect('bailleur/financer_ouvrage/');
+            } else {
+                //var_dump($_POST);exit;
+                // save data
+                $financer = array('code_bailleur' => $this->input->post('code_bailleur'),
+                    'code_projet' => 0,
+                    'code_ouvrage' => $this->input->post('code_ouvrage'),
+                    'annee_financement' => $this->input->post('annee_financement'),
+                    'montant_financement' => $this->input->post('montant_financement')
+                );
+
+                $idfinance = $this->Bailleur_model->save_finance($financer);
+                $this->session->set_flashdata('succes', 'financement enregistre avec succes!!');
+                redirect('bailleur/financementOuvrage/');
+            }
+        } else {
+            
+        }
+        // load view
+
+        $this->template->layout('sidebar_projet', 'bailleur/financeouvrageEdit', $data);
     }
 
     function verify_duplicate_finance($finance) {
@@ -275,6 +376,21 @@ class Bailleur extends CI_Controller {
         $projet = $finance['code_projet'];
 
         $resultat = $this->Bailleur_model->verify_finance($bailleur, $projet)->result();
+
+        if (count($resultat) > 0) {
+            return true;
+        } else {
+
+            return false;
+        }
+    }    
+	
+	function verify_duplicate_finance_ouvrage($finance) {
+        $data['$id_fin_projet'] = 'submenu-active';
+        $bailleur = $finance['code_bailleur'];
+        $ouvrage = $finance['code_ouvrage'];
+
+        $resultat = $this->Bailleur_model->verify_finance_ouvrage($bailleur, $ouvrage)->result();
 
         if (count($resultat) > 0) {
             return true;

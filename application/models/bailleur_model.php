@@ -23,6 +23,10 @@ class Bailleur_model extends CI_Model {
 	
 	function count_all_finance(){
 		return $this->db->count_all($this->financer);
+	}		
+	
+	function count_all_finance_ouvrage(){
+		return $this->db->count_all($this->financer);
 	}	
 	
 	function count_all_rehabilite(){
@@ -39,6 +43,16 @@ class Bailleur_model extends CI_Model {
 		$this->db->select('financer.*, bailleur.denomination as nom_bailleur, bailleur.type_bailleur as type_bailleur, projet.libelle_du_projet as nom_projet');
 		$this->db->from('bailleur, financer, projet');
 		$this->db->where('bailleur.code_bailleur = financer.code_bailleur and projet.code_projet = financer.code_projet');
+		$this->db->limit($limit, $offset);
+		$this->db->order_by('annee_financement','desc');
+		return $this->db->get();
+	}	
+	
+	function get_paged_list_finance_ouvrage($limit = 10, $offset = 0){
+	
+		$this->db->select('financer.*, bailleur.denomination as nom_bailleur, bailleur.type_bailleur as type_bailleur, ouvrage.code_de_l_ouvrage as code_ouvrage');
+		$this->db->from('bailleur, financer, ouvrage');
+		$this->db->where('bailleur.code_bailleur = financer.code_bailleur and ouvrage.code_de_l_ouvrage = financer.code_ouvrage');
 		$this->db->limit($limit, $offset);
 		$this->db->order_by('annee_financement','desc');
 		return $this->db->get();
@@ -80,6 +94,12 @@ class Bailleur_model extends CI_Model {
 	function verify_finance($code_bailleur, $code_projet){
 		$this->db->where('code_bailleur', $code_bailleur);
 		$this->db->where('code_projet', $code_projet);
+		return $this->db->get($this->financer);
+	}	
+	
+	function verify_finance_ouvrage($code_bailleur, $code_ouvrage){
+		$this->db->where('code_bailleur', $code_bailleur);
+		$this->db->where('code_ouvrage', $code_ouvrage);
 		return $this->db->get($this->financer);
 	}
 	
