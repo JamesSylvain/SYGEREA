@@ -103,13 +103,13 @@
 						<?php echo form_error('eau_traitee'); ?>
 					</td>
 					<td valign="top">Date de prelevement :<span style="color:red;">*</span></td>
-					<td><input type="text" size="40" name="date_de_prelevement" placeholder="Date de prelevement" class="input-text" value="<?php echo set_value('date_de_prelevement',$this->form_data->date_de_prelevement); ?>"/>
+					<td><input type="text" size="40" name="date_de_prelevement" placeholder="Date de prelevement" class="input-text" id="inputField" value="<?php echo set_value('date_de_prelevement',$this->form_data->date_de_prelevement); ?>"/>
 						<?php echo form_error('date_de_prelevement'); ?>
 					</td>
 				</tr>					
 				<tr>
 					<td valign="top">Date d'analyse :<span style="color:red;">*</span></td>
-					<td><input type="text" size="40" name="date_d_analyse" placeholder="Date d\'analyse" class="input-text" value="<?php echo set_value('date_d_analyse',$this->form_data->date_d_analyse); ?>"/>
+					<td><input type="text" size="40" name="date_d_analyse" placeholder="Date d\'analyse" class="input-text" id="inputField2" value="<?php echo set_value('date_d_analyse',$this->form_data->date_d_analyse); ?>"/>
 						<?php echo form_error('date_d_analyse'); ?>
 					</td>
 					<td valign="top">Saveur :<span style="color:red;">*</span></td>

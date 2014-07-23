@@ -107,7 +107,7 @@
                 <tr>
                     <td valign="top">Date de realisation<span style="color:red;">*</span></td>
                     <td>
-                        <input type="date" name="date_de_realisation" class="inp-form" value="<?php echo set_value('date_de_realisation', $this->form_data->date_de_realisation); ?>"/>
+                        <input type="text" name="date_de_realisation" class="inp-form"  id="inputField" value="<?php echo set_value('date_de_realisation', $this->form_data->date_de_realisation); ?>"/>
                         <?php echo form_error('date_de_realisation'); ?>
                     </td>
                 </tr>

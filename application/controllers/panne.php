@@ -62,7 +62,7 @@ class Panne extends CI_Controller {
 		// load view
 	//	$this->load->view('personList', $data);
 	
-		$this->template->layout('sidebar_param', 'panne/panneList', $data);
+		$this->template->layout('sidebar_panne', 'panne/panneList', $data);
 
 	}
 	
@@ -128,7 +128,7 @@ class Panne extends CI_Controller {
 		}
 		// load view
 		
-		$this->template->layout('sidebar_param', 'panne/panneEdit', $data);
+		$this->template->layout('sidebar_panne', 'panne/panneEdit', $data);
 		
 	}
 	
@@ -143,7 +143,7 @@ class Panne extends CI_Controller {
 		
 		// load view
 		
-		$this->template->layout('sidebar_param', 'panne/panneView', $data);
+		$this->template->layout('sidebar_panne', 'panne/panneView', $data);
 	}
 	
 	function updatepanne($code_panne)
@@ -156,22 +156,14 @@ class Panne extends CI_Controller {
 		
 		
 		$this->form_data = new stdclass;
+
 		$this->form_data->code_panne = $panne->code_panne;
-		$this->form_data->code_region = $panne->code_panne;
-		$this->form_data->code_departement = $panne->code_panne;
-		$this->form_data->code_arrondissement= $panne->code_panne;
-		$this->form_data->code_localite= $panne->code_panne;
-		$this->form_data->code_ouvrage= $panne->code_panne;
-		$this->form_data->libelle_panne = $panne->code_panne;
-		$this->form_data->date_mise_hors_usage = $panne->code_panne;
+		$this->form_data->libelle_panne = $panne->libelle_panne;
+		$this->form_data->date_mise_hors_usage = $panne->date_mise_hors_usage;
 		
 		if(isset($_POST['enregistrer'])){
 					// set validation properties
-				$this->form_validation->set_rules('code_region', 'Nom de la region', 'trim|required');
-				$this->form_validation->set_rules('code_departement', 'Nom du departement', 'trim|required');
-				$this->form_validation->set_rules('code_arrondissement', 'Nom de l\'arrondissement', 'trim|required');
-				$this->form_validation->set_rules('code_localite', 'Nom de la localite', 'trim|required');
-				$this->form_validation->set_rules('code_ouvrage', 'Ouvrage en panne', 'trim|required');
+
 				$this->form_validation->set_rules('libelle_panne', 'Description de la panne', 'trim|required');
 				$this->form_validation->set_rules('date_mise_hors_usage', 'Date mise hors usage', 'trim|required');
 				
@@ -196,7 +188,7 @@ class Panne extends CI_Controller {
 		}
 		// load view
 		
-		$this->template->layout('sidebar_param', 'panne/panneEdit', $data);
+		$this->template->layout('sidebar_panne', 'panne/panneEditdata', $data);
 		
 	}
 	

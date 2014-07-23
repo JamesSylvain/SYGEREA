@@ -72,7 +72,7 @@
 				</tr>								
 				<tr>
 					<td valign="top">Date recensement :<span style="color:red;">*</span></td>
-					<td><input type="text" size="40" name="date_recensement" placeholder="Date recensement" class="input-text" value="<?php echo set_value('date_recensement',$this->form_data->date_recensement); ?>"/>
+					<td><input type="text" size="40" name="date_recensement" placeholder="Date recensement"  id="inputField" class="input-text" value="<?php echo set_value('date_recensement',$this->form_data->date_recensement); ?>"/>
 						<?php echo form_error('date_recensement'); ?>
 					</td>
 				</tr>

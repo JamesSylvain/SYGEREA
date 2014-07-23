@@ -54,7 +54,7 @@
 				</tr>						
 				<tr>
 					<td valign="top">Date debut des travaux :<span style="color:red;">*</span></td>
-					<td><input type="text" size="40" name="date_de_rehabilitation" placeholder="Date debut des travaux" class="input-text" value="<?php echo set_value('date_de_rehabilitation',$this->form_data->date_de_rehabilitation); ?>"/>
+					<td><input type="text" size="40" name="date_de_rehabilitation" placeholder="Date debut des travaux" class="input-text" id="inputField" value="<?php echo set_value('date_de_rehabilitation',$this->form_data->date_de_rehabilitation); ?>"/>
 						<?php echo form_error('date_de_rehabilitation'); ?>
 					</td>
 				</tr>		

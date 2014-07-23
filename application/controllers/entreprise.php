@@ -240,7 +240,7 @@ class Entreprise extends CI_Controller  {
 		
 		// load view
 	
-		$this->template->layout('sidebar_projet', 'entreprise/rehabiliteList', $data);
+		$this->template->layout('sidebar_panne', 'entreprise/rehabiliteList', $data);
 
 	}
 	
@@ -300,7 +300,7 @@ class Entreprise extends CI_Controller  {
 		}
 		// load view
 		
-		$this->template->layout('sidebar_projet', 'entreprise/rehabiliteEdit', $data);
+		$this->template->layout('sidebar_panne', 'entreprise/rehabiliteEdit', $data);
 	}
 	
 	function verify_duplicate_rehabilite($rehabilite){
@@ -331,7 +331,7 @@ class Entreprise extends CI_Controller  {
 		
 		// load view
 		
-		$this->template->layout('sidebar_projet', 'entreprise/rehabiliteView', $data);
+		$this->template->layout('sidebar_panne', 'entreprise/rehabiliteView', $data);
 	}
 	
 	function update_rehabilite($code_rehabilite){
@@ -393,7 +393,7 @@ class Entreprise extends CI_Controller  {
 		}
 		// load view
 		
-		$this->template->layout('sidebar_projet', 'entreprise/rehabiliteEdit', $data);
+		$this->template->layout('sidebar_panne', 'entreprise/rehabiliteEdit', $data);
 
 	}
 	

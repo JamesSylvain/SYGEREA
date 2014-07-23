@@ -54,7 +54,7 @@
 			<tr>
 				<td valign="top">date d'installation<span style="color:red;">*</span></td>
                                 <td>
-                                    <input type="date" name="date_d_installation" class="inp-form" value="<?php echo set_value('date_d_installation',$this->form_data->date_d_installation); ?>"/>
+                                    <input type="text" name="date_d_installation" class="inp-form"  id="inputField" value="<?php echo set_value('date_d_installation',$this->form_data->date_d_installation); ?>"/>
                                     <?php echo form_error('date_d_installation'); ?>
 				</td>
 			</tr>
