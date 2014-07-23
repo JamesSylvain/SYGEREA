@@ -645,7 +645,7 @@ class Param extends CI_Controller {
 			}
 			else
 			{
-				var_dump($_POST);exit;
+			//	var_dump($_POST);exit;
 
 				// save data                    
 				$localite = array('nom' => $this->input->post('nom_localite'),
@@ -772,6 +772,248 @@ class Param extends CI_Controller {
 		
 	}
 	///////////////////////// fin de la  gestion des localites//////////////////////////////////////////////////////////////////////////////////////////////////////////		
+	
+	/////////////////////////////gestion des caracteriski eau /////////////////////////////////////////////////////////////////////////////////
+	function caract_eaux($offset = 0)
+	{
+		$table = 'carateristiques_eau';
+		// offset
+		$uri_segment = 3;
+		$offset = $this->uri->segment($uri_segment);
+		
+		// load data
+		$caract_eaus = $this->Param_model->get_paged_caract_eaux($table, $this->limit, $offset)->result();
+		
+		// generate pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url('param/caract_eaux/');
+ 		$config['total_rows'] = $this->Param_model->count_all($table);
+ 		$config['per_page'] = $this->limit;
+		$config['uri_segment'] = $uri_segment;
+		$this->pagination->initialize($config);
+		$data['pagination'] = $this->pagination->create_links();
+		
+		// generate table data
+		$this->load->library('table');
+		$this->table->set_empty("&nbsp;");
+		$this->table->set_heading('No', 'Eau Traitee', 'Date de prelevement', 'Date d\'analyse', 'Saveur', 'Limpidite', 'Turbidite', 'Actions');
+		$i = 0 + $offset;
+		foreach ($caract_eaus as $caract_eau)
+		{		
+
+			$this->table->add_row(++$i, $caract_eau->nom, $caract_eau->lieudit, $arrondissement_name, $adminstration[0]->nom_dept, $adminstration[0]->nom_region, $caract_eau->population_recensee,  $caract_eau->taux_de_croissance_de_la_populat, 
+				anchor('param/view/'.$caract_eau->code_caracteristique.'/carateristiques_eau/code_caracteristique',' ',array('class'=>'view')).' '.
+				anchor('param/updatelocalite/'.$caract_eau->code_caracteristique,' ',array('class'=>'update')).' '.
+				anchor('param/delete/'.$caract_eau->code_caracteristique,' ',array('class'=>'delete','onclick'=>"return confirm('Voulez vous supprimer cette caracteristique?')"))
+			);
+		}
+		$data['table'] = $this->table->generate();
+		
+		// load view
+
+		$this->template->layout('sidebar_param', 'param/caract_eauxList', $data);
+
+	}	
+
+	function addcaract_eaux()
+	{
+		$table = 'carateristiques_eau';
+	
+		// set empty default form field values
+		$this->form_data = new stdclass;
+		$this->form_data->code_caracteristique = '';
+		$this->form_data->code_de_l_ouvrage = '';
+		$this->form_data->turbidite = '';
+		$this->form_data->temperature = '';
+		$this->form_data->conductivite = '';
+		$this->form_data->matieres_organiques = '';
+		$this->form_data->mineralisation = '';
+		$this->form_data->ph = '';
+		$this->form_data->eau_traitee = '';
+		$this->form_data->date_de_prelevement = '';
+		$this->form_data->date_d_analyse = '';
+		$this->form_data->saveur = '';
+		$this->form_data->limpidite = '';
+		$this->form_data->k = '';
+		$this->form_data->nh4 = '';
+		$this->form_data->fe = '';
+		$this->form_data->mn = '';
+		$this->form_data->co3 = '';
+		$this->form_data->so4 = '';
+		$this->form_data->f = '';
+		$this->form_data->hco3 = '';
+		$this->form_data->co2_dissous = '';
+		$this->form_data->o2_dissous = '';
+		$this->form_data->silice = '';
+		
+		// set common properties
+		$data['title'] = 'Ajouter une catacteristique d\'eau :';
+		//		$data['message'] = '';
+		$data['action'] = site_url('param/addcaract_eaux');
+		$data['regions'] = $this->Param_model->get_regionlist()->result();
+		$data['departements'] = $this->Param_model->get_departementlist()->result();
+		$data['arrondissements'] = $this->Param_model->get_arrondissementlist()->result();
+		$data['arrondissements'] = $this->Param_model->get_arrondissementlist()->result();
+		
+			
+		if(isset($_POST['enregistrer'])){
+			
+			var_dump($_POST);exit;
+			// set validation properties
+			$this->form_validation->set_rules('nom_localite', 'Nom de la localite', 'trim|required');
+			$this->form_validation->set_rules('lieudit', 'Lieu dit', 'trim|required');
+			$this->form_validation->set_rules('code_arrondissement', 'Nom de l\'arrondissement', 'trim|required');
+			$this->form_validation->set_rules('code_region', 'Nom de la region', 'trim|required');
+			$this->form_validation->set_rules('code_departement', 'Nom du departement', 'trim|required');
+			$this->form_validation->set_rules('population_recensee', 'Population recensee', 'trim|required');
+			$this->form_validation->set_rules('date_recensement', 'Date du recensement', 'trim|required');
+			$this->form_validation->set_rules('taux_croissance', 'Taux de croissance', 'trim|required');
+			$this->form_validation->set_rules('coordonnees_en_x', 'Coordonnee en x', 'trim|required');
+			$this->form_validation->set_rules('coordonnees_en_y', 'Coordonnee en y', 'trim|required');
+			$this->form_validation->set_rules('coordonnees_en_z', 'Coordonnee en z', 'trim|required');
+			$this->form_validation->set_rules('nbre_de_menages', 'Nombre de menages', 'trim|required');
+			$this->form_validation->set_rules('nbre_d_ecole', 'Nombre d\'ecole', 'trim|required');
+			$this->form_validation->set_rules('nbre_de_centre_de_sante', 'Nombre de centre de sante', 'trim|required');
+			$this->form_validation->set_rules('nbre_d_hopitaux', 'Nombre d\'hopitaux', 'trim|required');
+			$this->form_validation->set_rules('nbre_de_lieux_de_culte', 'Nombre de lieux de cultes', 'trim|required');
+
+		//	$this->form_validation->set_message('required', '* Champ obligatoire');
+			
+				// run validation
+			if ($this->form_validation->run() == FALSE)
+			{
+				
+				$data['message'] = 'les champs marques * sont obligatoire veuillez verifier votre formulaire!!';
+			}
+			else
+			{
+			//	var_dump($_POST);exit;
+
+				// save data                    
+				$localite = array('nom' => $this->input->post('nom_localite'),
+										'code_arrondissement' => $this->input->post('code_arrondissement'),
+										'lieudit' => $this->input->post('lieudit'),
+										'population_recensee' => $this->input->post('population_recensee'),
+										'annee_recensement_population' => $this->input->post('date_recensement'),
+										'taux_de_croissance_de_la_populat' => $this->input->post('taux_croissance'),
+										'nbre_de_menages' => $this->input->post('nbre_de_menages'),
+										'coordonnees_en_x' => $this->input->post('coordonnees_en_x'),
+										'coordonnees_en_y' => $this->input->post('coordonnees_en_y'),
+										'coordonnees_en_z' => $this->input->post('coordonnees_en_z'),
+										'nbre_d_ecole' => $this->input->post('nbre_d_ecole'),
+										'nbre_de_centre_de_sante' => $this->input->post('nbre_de_centre_de_sante'),
+										'nbre_d_hopitaux' => $this->input->post('nbre_d_hopitaux'),
+										'nbre_de_lieux_de_culte' => $this->input->post('nbre_de_lieux_de_culte')
+										);
+										
+				$idlocalite = $this->Param_model->save($table, $localite);				
+				$this->session->set_flashdata('succes', 'localite enregistre avec succes!!');
+				redirect('param/caract_eaux/');
+
+			}
+		}else{
+			
+		}
+		// load view
+		
+		$this->template->layout('sidebar_param', 'param/caract_eauxEdit', $data);
+		
+	}		
+	
+	function updatecaract_eaux($code_localite)
+	{
+		$table = 'carateristiques_eau';
+		
+		$localite = $this->Param_model->get_localite($code_localite)->row();
+	
+		// set empty default form field values
+		$this->form_data = new stdclass;
+		$this->form_data->code_de_la_localite = $localite->code_de_la_localite;
+		$this->form_data->nom_localite = $localite->nom;
+		$this->form_data->lieudit = $localite->lieudit;
+		$this->form_data->code_arrondissement = $localite->code_arrondissement;
+		$this->form_data->population_recensee = $localite->population_recensee;
+		$this->form_data->date_recensement = $localite->annee_recensement_population;
+		$this->form_data->taux_croissance = $localite->taux_de_croissance_de_la_populat;
+		$this->form_data->coordonnees_en_x = $localite->coordonnees_en_x;
+		$this->form_data->coordonnees_en_y = $localite->coordonnees_en_y;
+		$this->form_data->coordonnees_en_z = $localite->coordonnees_en_z;
+		$this->form_data->nbre_de_menages = $localite->nbre_de_menages;
+		$this->form_data->nbre_d_ecole = $localite->nbre_d_ecole;
+		$this->form_data->nbre_de_centre_de_sante = $localite->nbre_de_centre_de_sante;
+		$this->form_data->nbre_d_hopitaux = $localite->nbre_d_hopitaux;
+		$this->form_data->nbre_de_lieux_de_culte = $localite->nbre_de_lieux_de_culte;
+		
+		// set common properties
+		$data['title'] = 'Modifier cette localite :';
+		//		$data['message'] = '';
+		$data['action'] = site_url('param/updatelocalite/'.$code_localite);
+		$data['arrondissements'] = $this->Param_model->get_arrondissementlist()->result();
+		
+			
+		if(isset($_POST['enregistrer'])){
+			
+			
+			// set validation properties
+			$this->form_validation->set_rules('nom_localite', 'Nom de la localite', 'trim|required');
+			$this->form_validation->set_rules('lieudit', 'Lieu dit', 'trim|required');
+			$this->form_validation->set_rules('code_arrondissement', 'Nom de l\'arrondissement', 'trim|required');
+			$this->form_validation->set_rules('population_recensee', 'Population recensee', 'trim|required');
+			$this->form_validation->set_rules('date_recensement', 'Date du recensement', 'trim|required');
+			$this->form_validation->set_rules('taux_croissance', 'Taux de croissance', 'trim|required');
+			$this->form_validation->set_rules('coordonnees_en_x', 'Coordonnee en x', 'trim|required');
+			$this->form_validation->set_rules('coordonnees_en_y', 'Coordonnee en y', 'trim|required');
+			$this->form_validation->set_rules('coordonnees_en_z', 'Coordonnee en z', 'trim|required');
+			$this->form_validation->set_rules('nbre_de_menages', 'Nombre de menages', 'trim|required');
+			$this->form_validation->set_rules('nbre_d_ecole', 'Nombre d\'ecole', 'trim|required');
+			$this->form_validation->set_rules('nbre_de_centre_de_sante', 'Nombre de centre de sante', 'trim|required');
+			$this->form_validation->set_rules('nbre_d_hopitaux', 'Nombre d\'hopitaux', 'trim|required');
+			$this->form_validation->set_rules('nbre_de_lieux_de_culte', 'Nombre de lieux de cultes', 'trim|required');
+
+		//	$this->form_validation->set_message('required', '* Champ obligatoire');
+			
+				// run validation
+			if ($this->form_validation->run() == FALSE)
+			{
+				
+				$data['message'] = 'les champs marques * sont obligatoire veuillez verifier votre formulaire!!';
+			}
+			else
+			{
+			//	var_dump($_POST);exit;
+
+				// save data                    
+				$localite = array('code_de_la_localite'=>$this->input->post('code_de_la_localite'),
+										'nom' => $this->input->post('nom_localite'),
+										'code_arrondissement' => $this->input->post('code_arrondissement'),
+										'lieudit' => $this->input->post('lieudit'),
+										'population_recensee' => $this->input->post('population_recensee'),
+										'annee_recensement_population' => $this->input->post('date_recensement'),
+										'taux_de_croissance_de_la_populat' => $this->input->post('taux_croissance'),
+										'nbre_de_menages' => $this->input->post('nbre_de_menages'),
+										'coordonnees_en_x' => $this->input->post('coordonnees_en_x'),
+										'coordonnees_en_y' => $this->input->post('coordonnees_en_y'),
+										'coordonnees_en_z' => $this->input->post('coordonnees_en_z'),
+										'nbre_d_ecole' => $this->input->post('nbre_d_ecole'),
+										'nbre_de_centre_de_sante' => $this->input->post('nbre_de_centre_de_sante'),
+										'nbre_d_hopitaux' => $this->input->post('nbre_d_hopitaux'),
+										'nbre_de_lieux_de_culte' => $this->input->post('nbre_de_lieux_de_culte')
+										);
+										
+				$this->Param_model->update('code_de_la_localite', $code_localite, $localite, $table);					
+				$this->session->set_flashdata('succes', 'localite modifie avec succes!!');
+				redirect('param/localites/');
+
+			}
+		}else{
+			
+		}
+		// load view
+		
+		$this->template->layout('sidebar_param', 'param/localitesEdit', $data);
+		
+	}
+	///////////////////////// fin de la  gestion des caract_eaux//////////////////////////////////////////////////////////////////////////////////////////////////////////		
 
 	////////////fonction generique pour tous les autres /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	

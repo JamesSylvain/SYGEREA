@@ -56,22 +56,26 @@ class Ouvrage extends CI_Controller {
         // generate table data
         $this->load->library('table');
         $this->table->set_empty("&nbsp;");
-        $this->table->set_heading('No', 'Entreprise ', 'Projet', 'Population', 'Date Réalisation', 'Actions');
+        $this->table->set_heading('No', 'Entreprise ', 'Projet','Localité', 'Population', 'Date Réalisation');
         $i = 0 + $offset;
         foreach ($ouvrages as $ouvrage) {
             $projet = $this->model->getEntity("SELECT * FROM projet WHERE code_projet=" . $ouvrage->code_projet)->row();
             $entreprise = $this->model->getEntity("SELECT * FROM entreprise WHERE code_entreprise=" . $ouvrage->code_entreprise . ";")->row();
-            $this->table->add_row(++$i, strtoupper($entreprise->nom_de_l_entreprise), $projet->libelle_du_projet, $ouvrage->population_desservie, $ouvrage->date_de_realisation, anchor('ouvrage/view/' . $ouvrage->code_de_l_ouvrage, 'View', array('class' => 'view')) . ' ' .
-                    anchor('ouvrage/update/' . $ouvrage->code_de_l_ouvrage, 'Update', array('class' => 'update')) . ' ' .
-                    anchor('ouvrage/delete/' . $ouvrage->code_de_l_ouvrage, 'Delete', array('class' => 'delete', 'onclick' => "return confirm('Are you sure want to delete this ouvrage ?')"))
-            );
+            $localite = $this->model->getEntity("SELECT localites.* FROM localites,ouvrage 
+                WHERE ouvrage.code_de_la_localite=localites.code_de_la_localite and 
+                ouvrage.code_de_l_ouvrage=" . $ouvrage->code_de_l_ouvrage . ";")->row();
+            $this->table->add_row(++$i, strtoupper($entreprise->nom_de_l_entreprise), 
+                    $projet->libelle_du_projet, 
+                    $localite->nom.' : '.$localite->lieudit,
+                    $ouvrage->population_desservie, 
+                    $ouvrage->date_de_realisation);
         }
         $data['table'] = $this->table->generate();
 
         // load view
 //		$this->load->view('personList', $projets);
 //	$this->template->layout('sidebar_default', 'welcome_message', $data);
-        $this->template->layout('sidebar_default', 'ouvrage/ouvrageList', $data);
+        $this->template->layout('sidebar_ouvrage', 'ouvrage/ouvrageList', $data);
     }
 
     function add() {

@@ -36,6 +36,11 @@ class Param_model extends CI_Model {
 		return $this->db->get($table, $limit, $offset);
 	}	
 	
+	function get_paged_caract_eaux($table, $limit = 10, $offset = 0){
+		$this->db->order_by('code_caracteristique','asc');
+		return $this->db->get($table, $limit, $offset);
+	}	
+	
 	function get_paged_arrondissements($table, $limit = 10, $offset = 0){
 		$this->db->order_by('code_arrondissement','asc');
 		return $this->db->get($table, $limit, $offset);
@@ -70,6 +75,16 @@ class Param_model extends CI_Model {
 	function get_arrondissement_by_dept($code_departement){
 		$this->db->where('code_departement', $code_departement);
 		return $this->db->get($this->arrondissements);
+	}	
+	
+	function get_localites_by_arrondis($code_arrondissement){
+		$this->db->where('code_arrondissement', $code_arrondissement);
+		return $this->db->get($this->localites);
+	}		
+	
+	function get_ouvrages_by_localite($code_localite){
+		$this->db->where('code_de_la_localite', $code_localite);
+		return $this->db->get('ouvrage');
 	}	
 	
 	function get_arrondissement($code_arrondissement){

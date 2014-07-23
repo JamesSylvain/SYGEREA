@@ -10,8 +10,8 @@
 	<li class="biggest" id="<?php echo $current; ?>"><a href="<?php echo base_url() . 'param/arrondissements'; ?>">Arrondissements</a></li>
 <?php if($menuactive=='localites'){$current = 'submenu-active';}else{ $current ='';}?>
 	<li class="biggest" id="<?php echo $current; ?>"><a href="<?php echo base_url() . 'param/localites'; ?>">Localites</a></li>
-<?php if($menuactive=='entreprise'){$current = 'submenu-active';}else{ $current ='';}?>
-	<li class="biggest" id="<?php echo $current; ?>"><a href="<?php echo base_url() . 'param/entreprise'; ?>">Entreprises</a></li>
 <?php if($menuactive=='caract_eaux'){$current = 'submenu-active';}else{ $current ='';}?>
 	<li class="biggest" id="<?php echo $current; ?>"><a href="<?php echo base_url() . 'param/caract_eaux'; ?>">Caracteristiques Eaux</a></li>
+<?php $menuactive = $this->uri->segment(1); if($menuactive=='entreprise'){$current = 'submenu-active';}else{ $current ='';}?>
+	<li class="biggest" id="<?php echo $current; ?>"><a href="<?php echo base_url() . 'entreprise'; ?>">Entreprises</a></li>
 </ul>

@@ -28,9 +28,16 @@ class Puisard extends CI_Controller {
 
         // load model
         $this->load->model('Model_generique', 'model', TRUE);
+        
+        if (!$this->ion_auth->logged_in())
+        {
+                //redirect them to the login page
+                redirect('auth/login', 'refresh');
+        }
     }
 
     function index($offset = 0) {
+        $data['$id_puisard']='submenu-active';
         // offset
         $uri_segment = 3;
         $offset = $this->uri->segment($uri_segment);
@@ -70,8 +77,8 @@ class Puisard extends CI_Controller {
 
         // load view
 //		$this->load->view('personList', $projets);
-//	$this->template->layout('sidebar_default', 'welcome_message', $data);
-        $this->template->layout('sidebar_default', 'puisard/ouvrageListPuisard', $data);
+//	$this->template->layout('sidebar_ouvrage', 'welcome_message', $data);
+        $this->template->layout('sidebar_ouvrage', 'puisard/ouvrageListPuisard', $data);
     }
 
     /**
@@ -80,6 +87,7 @@ class Puisard extends CI_Controller {
      */
     function update($id = 0) {
 //
+        $data['$id_puisard']='submenu-active';
         $table = 'ouvrage';
 
         $ouvrage = $this->model->get_by_id($table, $id, "code_de_l_ouvrage")->row();
@@ -108,7 +116,7 @@ class Puisard extends CI_Controller {
         $data['projets'] = $this->model->list_all('projet')->result();
         $data['entreprises'] = $this->model->list_all('entreprise')->result();
         $data['localites'] = $this->model->list_all('localites')->result();
-        $data['title'] = 'Modifier l\'ouvrage :';
+        $data['title'] = 'Modifier l\'ouvrage : Puisard';
         //		$data['message'] = '';
         $data['action'] = site_url('puisard/update/' . $id);
         $data['link_back'] = anchor('puisard/', 'Back to list of projet', array('class' => 'back'));
@@ -177,13 +185,14 @@ class Puisard extends CI_Controller {
         }
         // load view
 
-        $this->template->layout('sidebar_default', 'puisard/ouvrageUpdatePuisard', $data);
+        $this->template->layout('sidebar_ouvrage', 'puisard/ouvrageUpdatePuisard', $data);
     }
 
     /**
      * 
      */
     function add() {
+        $data['$id_puisard']='submenu-active';
         // set empty default form field values
         $table = 'ouvrage';
 
@@ -213,7 +222,7 @@ class Puisard extends CI_Controller {
         $data['projets'] = $this->model->list_all('projet')->result();
         $data['entreprises'] = $this->model->list_all('entreprise')->result();
         $data['localites'] = $this->model->list_all('localites')->result();
-        $data['title'] = 'Modifier l\'ouvrage :';
+        $data['title'] = 'Création de l\'ouvrage : Puisard';
         //		$data['message'] = '';
         $data['action'] = site_url('puisard/add/');
         $data['link_back'] = anchor('puisard/', 'Back to list of projet', array('class' => 'back'));
@@ -283,12 +292,13 @@ class Puisard extends CI_Controller {
         // load view
         // load view
 
-        $this->template->layout('sidebar_default', 'puisard/ouvrageEditPuisard', $data);
+        $this->template->layout('sidebar_ouvrage', 'puisard/ouvrageEditPuisard', $data);
     }
 
     function view($id) {
+        $data['$id_puisard']='submenu-active';
 // set common properties
-        $data['title'] = ' Details';
+        $data['title'] = ' Details Puisard';
         $data['link_back'] = anchor('puisard/index/', 'Back to list of projet', array('class' => 'back'));
         $data['link_edit'] = anchor('puisard/update/' . $id, 'Update', array('class' => 'update'));
         // get param details
@@ -304,10 +314,11 @@ class Puisard extends CI_Controller {
         $data['localite'] = $localite;
 
         // load view
-        $this->template->layout('sidebar_default', 'puisard/ouvrageViewPuisard', $data);
+        $this->template->layout('sidebar_ouvrage', 'puisard/ouvrageViewPuisard', $data);
     }
 
     function delete($id) {
+        $data['$id_puisard']='submenu-active';
         $this->model->delete("puisard", 'code_de_l_ouvrage', $id);
         $this->model->delete("ouvrage", 'code_de_l_ouvrage', $id);
         $this->session->set_flashdata('succes', 'ouvrage supprime avec succes!!');

@@ -28,9 +28,15 @@ class Latrine extends CI_Controller {
 
         // load model
         $this->load->model('Model_generique', 'model', TRUE);
+        if (!$this->ion_auth->logged_in())
+		{
+			//redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
     }
 
     function index($offset = 0) {
+        $data['$id_latrine']='submenu-active';
         // offset
         $uri_segment = 3;
         $offset = $this->uri->segment($uri_segment);
@@ -70,8 +76,8 @@ class Latrine extends CI_Controller {
 
         // load view
 //		$this->load->view('personList', $projets);
-//	$this->template->layout('sidebar_default', 'welcome_message', $data);
-        $this->template->layout('sidebar_default', 'latrine/ouvrageListLatrine', $data);
+//	$this->template->layout('sidebar_ouvrage', 'welcome_message', $data);
+        $this->template->layout('sidebar_ouvrage', 'latrine/ouvrageListLatrine', $data);
     }
 
     /**
@@ -80,6 +86,7 @@ class Latrine extends CI_Controller {
      */
     function update($id = 0) {
 //
+        $data['$id_latrine']='submenu-active';
         $table = 'ouvrage';
 
         $ouvrage = $this->model->get_by_id($table, $id, "code_de_l_ouvrage")->row();
@@ -108,7 +115,7 @@ class Latrine extends CI_Controller {
         $data['projets'] = $this->model->list_all('projet')->result();
         $data['entreprises'] = $this->model->list_all('entreprise')->result();
         $data['localites'] = $this->model->list_all('localites')->result();
-        $data['title'] = 'Modifier l\'ouvrage :';
+        $data['title'] = 'Modifier l\'ouvrage : Latrine';
         //		$data['message'] = '';
         $data['action'] = site_url('latrine/update/' . $id);
         $data['link_back'] = anchor('latrine/', 'Back to list of projet', array('class' => 'back'));
@@ -177,13 +184,14 @@ class Latrine extends CI_Controller {
         }
         // load view
 
-        $this->template->layout('sidebar_default', 'latrine/ouvrageUpdateLatrine', $data);
+        $this->template->layout('sidebar_ouvrage', 'latrine/ouvrageUpdateLatrine', $data);
     }
 
     /**
      * 
      */
     function add() {
+        $data['$id_latrine']='submenu-active';
         // set empty default form field values
         $table = 'ouvrage';
 
@@ -213,7 +221,7 @@ class Latrine extends CI_Controller {
         $data['projets'] = $this->model->list_all('projet')->result();
         $data['entreprises'] = $this->model->list_all('entreprise')->result();
         $data['localites'] = $this->model->list_all('localites')->result();
-        $data['title'] = 'Modifier l\'ouvrage :';
+        $data['title'] = 'Création de l\'ouvrage : Latrine';
         //		$data['message'] = '';
         $data['action'] = site_url('latrine/add/');
         $data['link_back'] = anchor('latrine/', 'Back to list of projet', array('class' => 'back'));
@@ -283,12 +291,13 @@ class Latrine extends CI_Controller {
         // load view
         // load view
 
-        $this->template->layout('sidebar_default', 'latrine/ouvrageEditLatrine', $data);
+        $this->template->layout('sidebar_ouvrage', 'latrine/ouvrageEditLatrine', $data);
     }
 
     function view($id) {
+        $data['$id_latrine']='submenu-active';
 // set common properties
-        $data['title'] = ' Details';
+        $data['title'] = ' Details : Latrines';
         $data['link_back'] = anchor('latrine/index/', 'Back to list of projet', array('class' => 'back'));
         $data['link_edit'] = anchor('latrine/update/' . $id, 'Update', array('class' => 'update'));
         // get param details
@@ -304,10 +313,11 @@ class Latrine extends CI_Controller {
         $data['localite'] = $localite;
 
         // load view
-        $this->template->layout('sidebar_default', 'latrine/ouvrageViewLatrine', $data);
+        $this->template->layout('sidebar_ouvrage', 'latrine/ouvrageViewLatrine', $data);
     }
 
     function delete($id) {
+        $data['$id_latrine']='submenu-active';
         $this->model->delete("latrine", 'code_de_l_ouvrage', $id);
         $this->model->delete("ouvrage", 'code_de_l_ouvrage', $id);
         $this->session->set_flashdata('succes', 'ouvrage supprime avec succes!!');

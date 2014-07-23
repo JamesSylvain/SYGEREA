@@ -65,8 +65,8 @@ class Model_generique extends CI_Model{
 	}
         
         function getEntities($req){
-           return $this->db->get($req);
-//             return $this->db->query($req);
+//           return $this->db->get($req);
+             return $this->db->query($req);
 //             return $this->conversion($q);
             
         }
@@ -89,6 +89,11 @@ class Model_generique extends CI_Model{
                     return $data;
                 }
         }
+        
+        function add_geom_param($table, $longt, $lat, $id_name, $id_val){
+	
+		$this->db->query("UPDATE $table SET \"geom\" = ST_GeomFromText('POINT($longt $lat)', 2154) WHERE $id_name=$id_val");
+	}
 }
 
 ?>

@@ -75,8 +75,8 @@ class Entreprise extends CI_Controller  {
 		
 		// load view
 //		$this->load->view('personList', $projets);
-//	$this->template->layout('sidebar_default', 'welcome_message', $data);
-		$this->template->layout('sidebar_default','entreprise/entrepriseList', $data);
+//	$this->template->layout('sidebar_param', 'welcome_message', $data);
+		$this->template->layout('sidebar_param','entreprise/entrepriseList', $data);
 
 	}	
 
@@ -121,7 +121,7 @@ class Entreprise extends CI_Controller  {
 		}else{
 		}
 		// load view
-		$this->template->layout('sidebar_default', 'entreprise/entrepriseEdit', $data);
+		$this->template->layout('sidebar_param', 'entreprise/entrepriseEdit', $data);
         }
          
         function view($id)
@@ -135,7 +135,7 @@ class Entreprise extends CI_Controller  {
 		
 		// load view
 		
-		$this->template->layout('sidebar_default', 'entreprise/entrepriseView', $data);
+		$this->template->layout('sidebar_param', 'entreprise/entrepriseView', $data);
         }
         function update($id)
 	{
@@ -192,7 +192,7 @@ class Entreprise extends CI_Controller  {
 		}
 		// load view
 		
-		$this->template->layout('sidebar_default', 'entreprise/entrepriseEdit', $data);
+		$this->template->layout('sidebar_param', 'entreprise/entrepriseEdit', $data);
 		
         }
          

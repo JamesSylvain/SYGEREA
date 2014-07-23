@@ -174,12 +174,6 @@
 						<?php echo form_error('coordonnees_en_y'); ?>
 					</td>
 				</tr>						
-				<tr>
-					<td valign="top">Coordonnee en z :<span style="color:red;">*</span></td>
-					<td><input type="text" size="40" name="coordonnees_en_z" placeholder="Coordonnee en z" class="input-text" value="<?php echo set_value('coordonnees_en_z',$this->form_data->coordonnees_en_z); ?>"/>
-						<?php echo form_error('coordonnees_en_z'); ?>
-					</td>
-				</tr>				
 			</table>
 			</div>
 		</fieldset>

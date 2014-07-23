@@ -881,7 +881,7 @@ class Auth extends CI_Controller {
 		}
 		$this->data['titre'] = 'Utilisateur connectes';
 
-	$date = explode(' ', date('d-m-Y H:i:s', time() - (6 * 60)));
+	$date = explode(' ', date('d-m-Y H:i:s', time() - (10 * 60)));
 
 	$details1 = explode('-', $date[0]);
 	$details2 = explode(':', $date[1]);

@@ -28,9 +28,15 @@ class Station_d_epuration extends CI_Controller {
 
         // load model
         $this->load->model('Model_generique', 'model', TRUE);
+        if (!$this->ion_auth->logged_in())
+        {
+                //redirect them to the login page
+                redirect('auth/login', 'refresh');
+        }
     }
 
     function index($offset = 0) {
+        $data['$id_station']='submenu-active';
         // offset
         $uri_segment = 3;
         $offset = $this->uri->segment($uri_segment);
@@ -67,8 +73,8 @@ class Station_d_epuration extends CI_Controller {
 
         // load view
 //		$this->load->view('personList', $projets);
-//	$this->template->layout('sidebar_default', 'welcome_message', $data);
-        $this->template->layout('sidebar_default', 'station_d_epuration/ouvrageListStation_d_epuration', $data);
+//	$this->template->layout('sidebar_ouvrage', 'welcome_message', $data);
+        $this->template->layout('sidebar_ouvrage', 'station_d_epuration/ouvrageListStation_d_epuration', $data);
     }
 
     /**
@@ -77,6 +83,7 @@ class Station_d_epuration extends CI_Controller {
      */
     function update($id = 0) {
 //
+        $data['$id_station']='submenu-active';
         $table = 'ouvrage';
 
         $ouvrage = $this->model->get_by_id($table, $id, "code_de_l_ouvrage")->row();
@@ -106,7 +113,7 @@ class Station_d_epuration extends CI_Controller {
         $data['projets'] = $this->model->list_all('projet')->result();
         $data['entreprises'] = $this->model->list_all('entreprise')->result();
         $data['localites'] = $this->model->list_all('localites')->result();
-        $data['title'] = 'Modifier l\'ouvrage :';
+        $data['title'] = 'Modifier l\'ouvrage : Station d\'Epuration';
         //		$data['message'] = '';
         $data['action'] = site_url('station_d_epuration/update/' . $id);
         $data['link_back'] = anchor('station_d_epuration/', 'Back to list of projet', array('class' => 'back'));
@@ -176,13 +183,14 @@ class Station_d_epuration extends CI_Controller {
         }
         // load view
 
-        $this->template->layout('sidebar_default', 'station_d_epuration/ouvrageUpdateStation_d_epuration', $data);
+        $this->template->layout('sidebar_ouvrage', 'station_d_epuration/ouvrageUpdateStation_d_epuration', $data);
     }
 
     /**
      * 
      */
     function add() {
+        $data['$id_station']='submenu-active';
         // set empty default form field values
         $table = 'ouvrage';
 
@@ -213,7 +221,7 @@ class Station_d_epuration extends CI_Controller {
         $data['projets'] = $this->model->list_all('projet')->result();
         $data['entreprises'] = $this->model->list_all('entreprise')->result();
         $data['localites'] = $this->model->list_all('localites')->result();
-        $data['title'] = 'Modifier l\'ouvrage :';
+        $data['title'] = 'Création de l\'ouvrage : Station d\'Epuration';
         //		$data['message'] = '';
         $data['action'] = site_url('station_d_epuration/add/');
         $data['link_back'] = anchor('station_d_epuration/', 'Back to list of projet', array('class' => 'back'));
@@ -285,12 +293,13 @@ class Station_d_epuration extends CI_Controller {
         // load view
         // load view
 
-        $this->template->layout('sidebar_default', 'station_d_epuration/ouvrageEditStation_d_epuration', $data);
+        $this->template->layout('sidebar_ouvrage', 'station_d_epuration/ouvrageEditStation_d_epuration', $data);
     }
 
     function view($id) {
+        $data['$id_station']='submenu-active';
 // set common properties
-        $data['title'] = ' Details';
+        $data['title'] = ' Details : Station d\'Epuration';
         $data['link_back'] = anchor('station_d_epuration/index/', 'Back to list of projet', array('class' => 'back'));
         $data['link_edit'] = anchor('station_d_epuration/update/' . $id, 'Update', array('class' => 'update'));
         // get param details
@@ -306,10 +315,11 @@ class Station_d_epuration extends CI_Controller {
         $data['localite'] = $localite;
 
         // load view
-        $this->template->layout('sidebar_default', 'station_d_epuration/ouvrageViewStation_d_epuration', $data);
+        $this->template->layout('sidebar_ouvrage', 'station_d_epuration/ouvrageViewStation_d_epuration', $data);
     }
 
     function delete($id) {
+        $data['$id_station']='submenu-active';
         $this->model->delete("station_d_epuration", 'code_de_l_ouvrage', $id);
         $this->model->delete("ouvrage", 'code_de_l_ouvrage', $id);
         $this->session->set_flashdata('succes', 'ouvrage supprime avec succes!!');

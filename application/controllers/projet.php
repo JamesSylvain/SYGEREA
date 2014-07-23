@@ -18,6 +18,11 @@ class Projet extends CI_Controller {
 
         // load model
         $this->load->model('Model_generique', 'model', TRUE);
+        if (!$this->ion_auth->logged_in())
+        {
+                //redirect them to the login page
+                redirect('auth/login', 'refresh');
+        }
     }
     
     function index($offset = 0)
@@ -56,7 +61,7 @@ class Projet extends CI_Controller {
 		// load view
 //		$this->load->view('personList', $projets);
 //	$this->template->layout('sidebar_default', 'welcome_message', $data);
-		$this->template->layout('sidebar_default','projet/projetList', $data);
+		$this->template->layout('sidebar_projet','projet/projetList', $data);
 
 	}	
 
@@ -91,7 +96,7 @@ class Projet extends CI_Controller {
 		}else{
 		}
 		// load view
-		$this->template->layout('sidebar_default', 'projet/projetEdit', $data);
+		$this->template->layout('sidebar_projet', 'projet/projetEdit', $data);
         }
          
         function view($id)
@@ -105,7 +110,7 @@ class Projet extends CI_Controller {
 		
 		// load view
 		
-		$this->template->layout('sidebar_default', 'projet/projetView', $data);
+		$this->template->layout('sidebar_projet', 'projet/projetView', $data);
         }
         function update($id)
 	{
@@ -154,7 +159,7 @@ class Projet extends CI_Controller {
 		}
 		// load view
 		
-		$this->template->layout('sidebar_default', 'projet/projetEdit', $data);
+		$this->template->layout('sidebar_projet', 'projet/projetEdit', $data);
 		
         }
          

@@ -28,10 +28,18 @@ class Forages_ou_puits extends CI_Controller {
 
         // load model
         $this->load->model('Model_generique', 'model', TRUE);
+        
+        
+        if (!$this->ion_auth->logged_in())
+        {
+                //redirect them to the login page
+                redirect('auth/login', 'refresh');
+        }
     }
 
     function index($offset = 0) {
         // offset
+        $data['id_forage']='submenu-active';
         $uri_segment = 3;
         $offset = $this->uri->segment($uri_segment);
         $table = 'forages_ou_puits';
@@ -53,22 +61,27 @@ class Forages_ou_puits extends CI_Controller {
         $this->table->set_heading('No', 'Entreprise ', 'Projet', 'Localité', 'Date Réalisation', 'Actions');
         $i = 0 + $offset;
         foreach ($ouvrages as $source) {
+
             $projet = $this->model->getEntity('select projet.* from projet,ouvrage where projet.code_projet=ouvrage.code_projet and ouvrage.code_de_l_ouvrage=' . $source->code_de_l_ouvrage)->row();
             $entreprise = $this->model->getEntity('select entreprise.* from entreprise,ouvrage where entreprise.code_entreprise=ouvrage.code_entreprise and ouvrage.code_de_l_ouvrage=' . $source->code_de_l_ouvrage)->row();
             $localite = $this->model->getEntity("SELECT localites.* FROM localites,ouvrage WHERE ouvrage.code_de_la_localite=localites.code_de_la_localite and ouvrage.code_de_l_ouvrage=" . $source->code_de_l_ouvrage . ";")->row();
-            $ouvrage = $this->model->getEntity("SELECT * FROM ouvrage WHERE ouvrage.code_de_l_ouvrage=" . $source->code_de_l_ouvrage . ";")->row();
+			$administration = $this->Param_model->get_administrationby_localite($localite->code_arrondissement)->row();
+			$administra = $administration->nom_region.' -> ';    
+			$administra .= $administration->nom_dept.' -> ';    
+			$administra .= $administration->nom_arrondis.' -> '; 
+			$ouvrage = $this->model->getEntity("SELECT * FROM ouvrage WHERE ouvrage.code_de_l_ouvrage=" . $source->code_de_l_ouvrage . ";")->row();
             $this->table->add_row(++$i, anchor('entreprise/view/' . $entreprise->code_entreprise, strtoupper($entreprise->nom_de_l_entreprise), array()), 
                     anchor('projet/view/' . $projet->code_projet, strtoupper($projet->libelle_du_projet), array()), 
-                    anchor('localite/view/' . $localite->code_de_la_localite, strtoupper($localite->nom), array()), 
+                    anchor('localite/view/' . $localite->code_de_la_localite, strtoupper($administra.$localite->nom), array()), 
                     $ouvrage->date_de_realisation, 
                     anchor('forages_ou_puits/view/' . $source->code_de_l_ouvrage, 'View', array('class' => 'view')) . ' ' .
-                    anchor('forages_ou_puits/update_phaseOne/' . $source->code_de_l_ouvrage, 'Update', array('class' => 'update')) . ' ' .
+                    anchor('forages_ou_puits/update/' . $source->code_de_l_ouvrage, 'Update', array('class' => 'update')) . ' ' .
                     anchor('forages_ou_puits/delete/' . $source->code_de_l_ouvrage, 'Delete', array('class' => 'delete', 'onclick' => "return confirm('Are you sure want to delete this ouvrage ?')"))
             );
         }
         $data['table'] = $this->table->generate();
 
-        $this->template->layout('sidebar_default', 'forages_ou_puits/ouvrageListForages_ou_puits', $data);
+        $this->template->layout('sidebar_ouvrage', 'forages_ou_puits/ouvrageListForages_ou_puits', $data);
     }
 
     /**
@@ -78,6 +91,7 @@ class Forages_ou_puits extends CI_Controller {
 
     function update($id = 0) {
 //
+        $data['id_forage']='submenu-active';
         $table = 'ouvrage';
 
         $ouvrage = $this->model->get_by_id($table, $id, "code_de_l_ouvrage")->row();
@@ -109,7 +123,7 @@ class Forages_ou_puits extends CI_Controller {
         $data['projets'] = $this->model->list_all('projet')->result();
         $data['entreprises'] = $this->model->list_all('entreprise')->result();
         $data['localites'] = $this->model->list_all('localites')->result();
-        $data['title'] = 'Modifier l\'ouvrage :';
+        $data['title'] = 'Modifier l\'ouvrage : Forages ou Puits';
         //		$data['message'] = '';
         $data['action'] = site_url('forages_ou_puits/update/' . $id);
         $data['link_back'] = anchor('forages_ou_puits/', 'Back to list of projet', array('class' => 'back'));
@@ -146,7 +160,7 @@ class Forages_ou_puits extends CI_Controller {
                 // save data
 
                 $ouvrage = array(
-                    'code_de_l_ouvrage' => $id,
+//                    'code_de_l_ouvrage' => $id,
 //                    'code_entreprise' => $this->input->post('code_entreprise'),
 //                    'code_projet' => $this->input->post('code_projet'),
                     'population_desservie' => $this->input->post('population_desservie'),
@@ -154,8 +168,8 @@ class Forages_ou_puits extends CI_Controller {
                     'coordonnees_en_x' => $this->input->post('coordonnees_en_x'),
                     'coordonees_en_y' => $this->input->post('coordonees_en_y'),
                     'type_ouvrage' => $this->input->post('type_ouvrage'),
-                    'code_de_la_localite' => $this->input->post('code_de_la_localite'),
-//                    'etat_de_l_ouvrage' => $this->input->post('etat_de_l_ouvrage'),
+//                    'code_de_la_localite' => $this->input->post('code_de_la_localite'),
+                    'etat_de_l_ouvrage' => $this->input->post('etat_de_l_ouvrage'),
                     'type_ouvrage' => 1
                 );
 
@@ -192,10 +206,11 @@ class Forages_ou_puits extends CI_Controller {
         }
         // load view
 
-        $this->template->layout('sidebar_default', 'forages_ou_puits/ouvrageUpdateForages_ou_puits', $data);
+        $this->template->layout('sidebar_ouvrage', 'forages_ou_puits/ouvrageUpdateForages_ou_puits', $data);
     }
     function add() {
 //
+        $data['id_forage']='submenu-active';
         $table = 'ouvrage';
 
         $this->form_data = new stdclass;
@@ -229,7 +244,7 @@ class Forages_ou_puits extends CI_Controller {
         $data['projets'] = $this->model->list_all('projet')->result();
         $data['entreprises'] = $this->model->list_all('entreprise')->result();
         $data['localites'] = $this->model->list_all('localites')->result();
-        $data['title'] = 'Modifier l\'ouvrage :';
+        $data['title'] = 'Création de l\'ouvrage : Forages ou Puits';
         //		$data['message'] = '';
         $data['action'] = site_url('forages_ou_puits/add/');
         $data['link_back'] = anchor('forages_ou_puits/', 'Back to list of projet', array('class' => 'back'));
@@ -315,7 +330,7 @@ class Forages_ou_puits extends CI_Controller {
         }
         // load view
 
-        $this->template->layout('sidebar_default', 'forages_ou_puits/ouvrageEditForages_ou_puits', $data);
+        $this->template->layout('sidebar_ouvrage', 'forages_ou_puits/ouvrageEditForages_ou_puits', $data);
     }
     /**
      * 
@@ -324,8 +339,9 @@ class Forages_ou_puits extends CI_Controller {
 
 
     function view($id) {
+        $data['id_forage']='submenu-active';
         // set common properties
-        $data['title'] = ' Details';
+        $data['title'] = ' Details : Forages ou Puits';
         $data['link_back'] = anchor('forages_ou_puits/index/', 'Back to list of projet', array('class' => 'back'));
         $data['link_edit'] = anchor('forages_ou_puits/update/' . $id, 'Update', array('class' => 'update'));
         // get param details
@@ -341,10 +357,11 @@ class Forages_ou_puits extends CI_Controller {
         $data['localite'] = $localite;
 
         // load view
-        $this->template->layout('sidebar_default', 'forages_ou_puits/ouvrageViewForages_ou_puits', $data);
+        $this->template->layout('sidebar_ouvrage', 'forages_ou_puits/ouvrageViewForages_ou_puits', $data);
     }
 
     function delete($id) {
+        $data['id_forage']='submenu-active';
         $this->model->delete("forages_ou_puits", 'code_de_l_ouvrage', $id);
         $this->model->delete("ouvrage", 'code_de_l_ouvrage', $id);
         $this->session->set_flashdata('succes', 'ouvrage supprime avec succes!!');

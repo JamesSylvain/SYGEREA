@@ -6,5 +6,5 @@
 	<div class="data"><?php echo $table; ?></div>
 	<div class="paging"><?php echo $pagination; ?></div>
 	<br />
-	<?php echo anchor('pompes/add/','add new data',array('class'=>'add')); ?>
+	<?php echo anchor('pompes/add/','Ajouter une pompe',array('class'=>'add')); ?>
 

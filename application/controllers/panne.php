@@ -50,10 +50,11 @@ class Panne extends CI_Controller {
 		$i = 0 + $offset;
 		foreach ($persons as $panne)
 		{
-			$this->table->add_row(++$i, $panne->code_de_l_ouvrage,  $panne->localite,  $panne->libelle_panne,  $panne->date_mise_hors_usage, 
-				anchor('panne/view/'.$panne->id,'view',array('class'=>'view')).' '.
-				anchor('panne/update/'.$panne->id,'update',array('class'=>'update')).' '.
-				anchor('panne/delete/'.$panne->id,'delete',array('class'=>'delete','onclick'=>"return confirm('voulez vous supprimer cette panne?')"))
+			 $administration = 'xxxxx';
+			$this->table->add_row(++$i, $panne->code_de_l_ouvrage,  $administration,  $panne->libelle_panne,  $panne->date_mise_hors_usage, 
+				anchor('panne/view/'.$panne->code_panne,'view',array('class'=>'view')).' '.
+				anchor('panne/updatepanne/'.$panne->code_panne,'update',array('class'=>'update')).' '.
+				anchor('panne/delete/'.$panne->code_panne,'delete',array('class'=>'delete','onclick'=>"return confirm('voulez vous supprimer cette panne?')"))
 			);
 		}
 		$data['table'] = $this->table->generate();
@@ -148,50 +149,51 @@ class Panne extends CI_Controller {
 	function updatepanne($code_panne)
 	{
 	
-		$data['panne'] = $this->Panne_model->get_by_id($code_panne)->row();
+		$data['panne'] = $panne = $this->Panne_model->get_by_id($code_panne)->row();
 		// set common properties
 		$data['title'] = 'modifier cette panne';
 		$data['action'] = site_url('panne/updatepanne/'.$code_panne);
 		
 		
 		$this->form_data = new stdclass;
-		$this->form_data->code_panne = '';
-		$this->form_data->code_region = '';
-		$this->form_data->code_departement = '';
-		$this->form_data->code_arrondissement= '';
-		$this->form_data->code_localite= '';
-		$this->form_data->code_ouvrage= '';
-		$this->form_data->libelle_panne = '';
-		$this->form_data->date_mise_hors_usage = '';
+		$this->form_data->code_panne = $panne->code_panne;
+		$this->form_data->code_region = $panne->code_panne;
+		$this->form_data->code_departement = $panne->code_panne;
+		$this->form_data->code_arrondissement= $panne->code_panne;
+		$this->form_data->code_localite= $panne->code_panne;
+		$this->form_data->code_ouvrage= $panne->code_panne;
+		$this->form_data->libelle_panne = $panne->code_panne;
+		$this->form_data->date_mise_hors_usage = $panne->code_panne;
 		
+		if(isset($_POST['enregistrer'])){
 					// set validation properties
-			$this->form_validation->set_rules('code_region', 'Nom de la region', 'trim|required');
-			$this->form_validation->set_rules('code_departement', 'Nom du departement', 'trim|required');
-			$this->form_validation->set_rules('code_arrondissement', 'Nom de l\'arrondissement', 'trim|required');
-			$this->form_validation->set_rules('code_localite', 'Nom de la localite', 'trim|required');
-			$this->form_validation->set_rules('code_ouvrage', 'Ouvrage en panne', 'trim|required');
-			$this->form_validation->set_rules('libelle_panne', 'Description de la panne', 'trim|required');
-			$this->form_validation->set_rules('date_mise_hors_usage', 'Date mise hors usage', 'trim|required');
-			
-		// run validation
-		if ($this->form_validation->run() == FALSE)
-		{
-			$data['message'] = 'les champs marques * sont obligatoire veuillez verifier votre formulaire!!';
+				$this->form_validation->set_rules('code_region', 'Nom de la region', 'trim|required');
+				$this->form_validation->set_rules('code_departement', 'Nom du departement', 'trim|required');
+				$this->form_validation->set_rules('code_arrondissement', 'Nom de l\'arrondissement', 'trim|required');
+				$this->form_validation->set_rules('code_localite', 'Nom de la localite', 'trim|required');
+				$this->form_validation->set_rules('code_ouvrage', 'Ouvrage en panne', 'trim|required');
+				$this->form_validation->set_rules('libelle_panne', 'Description de la panne', 'trim|required');
+				$this->form_validation->set_rules('date_mise_hors_usage', 'Date mise hors usage', 'trim|required');
+				
+			// run validation
+			if ($this->form_validation->run() == FALSE)
+			{
+				$data['message'] = 'les champs marques * sont obligatoire veuillez verifier votre formulaire!!';
+			}
+			else
+			{
+				// save data
+					$panne = array('code_de_l_ouvrage' => $this->input->post('code_ouvrage'),
+											'libelle_panne' => $this->input->post('libelle_panne'),
+											'date_mise_hors_usage' => $this->input->post('date_mise_hors_usage')
+											);
+				$this->Panne_model->update($code_panne,$panne);
+				
+				// set user message
+					$this->session->set_flashdata('succes', 'panne modifier avec succes!!');
+					redirect('panne/');
+			}
 		}
-		else
-		{
-			// save data
-				$panne = array('code_de_l_ouvrage' => $this->input->post('code_ouvrage'),
-										'libelle_panne' => $this->input->post('libelle_panne'),
-										'date_mise_hors_usage' => $this->input->post('date_mise_hors_usage')
-										);
-			$this->Panne_model->update($code_panne,$panne);
-			
-			// set user message
-				$this->session->set_flashdata('succes', 'panne modifier avec succes!!');
-				redirect('panne/');
-		}
-		
 		// load view
 		
 		$this->template->layout('sidebar_param', 'panne/panneEdit', $data);
@@ -265,7 +267,47 @@ class Panne extends CI_Controller {
 				echo "</select>";
 		}else{
 		
-			echo 'pas de sous departement pour cette region';
+			echo 'pas d\'arrondissement pour ce departement';
+		}
+	}	
+	
+	public function selectlocalite(){
+	
+		$code_arrondissement = $_POST['code_arrondissement'];
+		$localites = $this->Param_model->get_localites_by_arrondis($code_arrondissement)->result();
+		
+		if(count($localites)>0){
+				echo '<select type="text"  name="code_localite" class="input-text">';
+				echo '<option value="" >-- Choisir une localite --</option>';
+				foreach($localites as $localite){
+								
+					echo '<option value="'.$localite->code_de_la_localite.'">'.$localite->nom.' - '.$localite->lieudit.'</option>';
+						
+				}
+				echo "</select>";
+		}else{
+		
+			echo 'pas de localite pour cet arrondissement';
+		}
+	}	
+	
+	public function selectouvrage(){
+	
+		$code_localite = $_POST['code_localite'];
+		$ouvrages = $this->Param_model->get_ouvrages_by_localite($code_localite)->result();
+		
+		if(count($ouvrages)>0){
+				echo '<select type="text"  name="code_ouvrage" class="input-text">';
+				echo '<option value="" >-- Choisir un ouvrage --</option>';
+				foreach($ouvrages as $ouvrage){
+								
+					echo '<option value="'.$ouvrage->code_de_l_ouvrage.'">'.$ouvrage->code_de_l_ouvrage.'</option>';
+						
+				}
+				echo "</select>";
+		}else{
+		
+			echo 'pas d\'ouvrage pour cette localite';
 		}
 	}
 	

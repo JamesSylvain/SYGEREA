@@ -28,10 +28,16 @@ class Ouvrage_sources_em extends CI_Controller {
 
         // load model
         $this->load->model('Model_generique', 'model', TRUE);
+        if (!$this->ion_auth->logged_in())
+        {
+                //redirect them to the login page
+                redirect('auth/login', 'refresh');
+        }
     }
 
     function index($offset = 0) {
         // offset
+        $data['$id_sourem']='submenu-active';
         $uri_segment = 3;
         $offset = $this->uri->segment($uri_segment);
         $table = 'source_amenagees';
@@ -64,7 +70,7 @@ class Ouvrage_sources_em extends CI_Controller {
         }
         $data['table'] = $this->table->generate();
 
-        $this->template->layout('sidebar_default', 'ouvrage_sources_em/ouvrageListOuvrage_sources_em', $data);
+        $this->template->layout('sidebar_ouvrage', 'ouvrage_sources_em/ouvrageListOuvrage_sources_em', $data);
     }
 
     /**
@@ -74,6 +80,7 @@ class Ouvrage_sources_em extends CI_Controller {
 
     function update($id = 0) {
 //
+        $data['$id_sourem']='submenu-active';
         $table = 'ouvrage';
 
         $ouvrage = $this->model->get_by_id($table, $id, "code_de_l_ouvrage")->row();
@@ -105,7 +112,7 @@ class Ouvrage_sources_em extends CI_Controller {
         $data['projets'] = $this->model->list_all('projet')->result();
         $data['entreprises'] = $this->model->list_all('entreprise')->result();
         $data['localites'] = $this->model->list_all('localites')->result();
-        $data['title'] = 'Modifier l\'ouvrage :';
+        $data['title'] = 'Modifier l\'ouvrage : Source Amenagee';
         //		$data['message'] = '';
         $data['action'] = site_url('ouvrage_sources_em/update/' . $id);
         $data['link_back'] = anchor('ouvrage_sources_em/', 'Back to list of projet', array('class' => 'back'));
@@ -188,10 +195,11 @@ class Ouvrage_sources_em extends CI_Controller {
         }
         // load view
 
-        $this->template->layout('sidebar_default', 'ouvrage_sources_em/ouvrageUpdateOuvrage_sources_em', $data);
+        $this->template->layout('sidebar_ouvrage', 'ouvrage_sources_em/ouvrageUpdateOuvrage_sources_em', $data);
     }
     function add() {
 //
+        $data['$id_sourem']='submenu-active';
         $table = 'ouvrage';
 
         $this->form_data = new stdclass;
@@ -224,7 +232,7 @@ class Ouvrage_sources_em extends CI_Controller {
         $data['projets'] = $this->model->list_all('projet')->result();
         $data['entreprises'] = $this->model->list_all('entreprise')->result();
         $data['localites'] = $this->model->list_all('localites')->result();
-        $data['title'] = 'Modifier l\'ouvrage :';
+        $data['title'] = 'Création de l\'ouvrage : Source Amenagee';
         //		$data['message'] = '';
         $data['action'] = site_url('ouvrage_sources_em/add/');
         $data['link_back'] = anchor('ouvrage_sources_em/', 'Back to list of projet', array('class' => 'back'));
@@ -310,7 +318,7 @@ class Ouvrage_sources_em extends CI_Controller {
         }
         // load view
 
-        $this->template->layout('sidebar_default', 'ouvrage_sources_em/ouvrageEditOuvrage_sources_em', $data);
+        $this->template->layout('sidebar_ouvrage', 'ouvrage_sources_em/ouvrageEditOuvrage_sources_em', $data);
     }
     /**
      * 
@@ -319,8 +327,9 @@ class Ouvrage_sources_em extends CI_Controller {
 
 
     function view($id) {
+        $data['$id_sourem']='submenu-active';
         // set common properties
-        $data['title'] = ' Details';
+        $data['title'] = ' Details : Source Amenagee';
         $data['link_back'] = anchor('ouvrage_sources_em/index/', 'Back to list of projet', array('class' => 'back'));
         $data['link_edit'] = anchor('ouvrage_sources_em/update/' . $id, 'Update', array('class' => 'update'));
         // get param details
@@ -336,10 +345,11 @@ class Ouvrage_sources_em extends CI_Controller {
         $data['localite'] = $localite;
 
         // load view
-        $this->template->layout('sidebar_default', 'ouvrage_sources_em/ouvrageViewOuvrage_sources_em', $data);
+        $this->template->layout('sidebar_ouvrage', 'ouvrage_sources_em/ouvrageViewOuvrage_sources_em', $data);
     }
 
     function delete($id) {
+        $data['$id_sourem']='submenu-active';
         $this->model->delete("source_amenagees", 'code_de_l_ouvrage', $id);
         $this->model->delete("ouvrage", 'code_de_l_ouvrage', $id);
         $this->session->set_flashdata('succes', 'ouvrage supprime avec succes!!');

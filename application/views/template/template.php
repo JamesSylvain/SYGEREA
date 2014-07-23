@@ -25,6 +25,27 @@
 	<script type="text/javascript" src="<?php echo base_url() . 'assets/js/ui.core.js'; ?>"></script>
 	<script type="text/javascript" src="<?php echo base_url() . 'assets/js/ui.tabs.js'; ?>"></script>
 	<script type="text/javascript">
+	
+		window.onload = function(){
+			new JsDatePick({
+				useMode:2,
+				target:"inputField",
+				dateFormat:"%d-%M-%Y"
+			});
+			new JsDatePick({
+				useMode:2,
+				target:"inputField2",
+				dateFormat:"%d-%M-%Y"
+			});		
+			new JsDatePick({
+				useMode:2,
+				target:"inputField3",
+				dateFormat:"%d-%M-%Y"
+			});
+		};
+	</script>
+	
+	<script type="text/javascript">
 	$(document).ready(function(){
 		$(".tabs > ul").tabs();
 	});
@@ -93,7 +114,6 @@
 						document.getElementById('arrondissement').innerHTML = leselect;
 					}
 				}
- 
 				// Ici on va voir comment faire du post
 				xhr.open("POST",site+"panne/selectarrondiss",true);
 				// ne pas oublier ça pour le post
@@ -104,31 +124,66 @@
 				code_departement = sel.options[sel.selectedIndex].value;
 				xhr.send("code_departement="+code_departement);
 		}		
+		
+		function go5(){
+				var site = "<?php echo site_url();?>";
+				var xhr = getXhr();
+			
+				// On défini ce qu'on va faire quand on aura la réponse
+				xhr.onreadystatechange = function(){
+					// On ne fait quelque chose que si on a tout reçu et que le serveur est ok
+					if(xhr.readyState == 4 && xhr.status == 200){
+						leselect = xhr.responseText;
+						
+					//	alert(xhr.responseText);
+						
+						// On se sert de innerHTML pour rajouter les options a la liste
+						document.getElementById('localite').innerHTML = leselect;
+					}
+				}
+				// Ici on va voir comment faire du post
+				xhr.open("POST",site+"panne/selectlocalite",true);
+				// ne pas oublier ça pour le post
+				xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+				// ne pas oublier de poster les arguments
+				// ici, l'id de la categorie
+				sel = document.getElementById('arrondissement');
+				code_arrondissement = sel.options[sel.selectedIndex].value;
+				xhr.send("code_arrondissement="+code_arrondissement);
+		}		
+		
+		function go6(){
+				var site = "<?php echo site_url();?>";
+				var xhr = getXhr();
+			
+				// On défini ce qu'on va faire quand on aura la réponse
+				xhr.onreadystatechange = function(){
+					// On ne fait quelque chose que si on a tout reçu et que le serveur est ok
+					if(xhr.readyState == 4 && xhr.status == 200){
+						leselect = xhr.responseText;
+						
+					//	alert(xhr.responseText);
+						
+						// On se sert de innerHTML pour rajouter les options a la liste
+						document.getElementById('ouvrage').innerHTML = leselect;
+					}
+				}
+				// Ici on va voir comment faire du post
+				xhr.open("POST",site+"panne/selectouvrage",true);
+				// ne pas oublier ça pour le post
+				xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+				// ne pas oublier de poster les arguments
+				// ici, l'id de la categorie
+				sel = document.getElementById('localite');
+				code_localite = sel.options[sel.selectedIndex].value;
+				xhr.send("code_localite="+code_localite);
+		}		
 	</script>
-	<script type="text/javascript">
-	window.onload = function(){
-		new JsDatePick({
-			useMode:2,
-			target:"inputField",
-			dateFormat:"%d-%M-%Y"
-		});
-		new JsDatePick({
-			useMode:2,
-			target:"inputField2",
-			dateFormat:"%d-%M-%Y"
-		});		
-		new JsDatePick({
-			useMode:2,
-			target:"inputField3",
-			dateFormat:"%d-%M-%Y"
-		});
-	};
-</script>
+
 	<title>SYGEREA</title>
 </head>
 
-<body>
-
+<body onload="date_heure('date_heure');">
 <div id="main">
 
 	<!-- Tray -->
@@ -149,17 +204,17 @@
 	<div id="menu" class="box">
 
 		<ul class="box">
-			<li id="menu-active"><a href="#"><span>Accueil</span></a></li> <!-- Active -->
-			<li><a href="#"><span>Projets</span></a></li>
-			<li><a href="#"><span>Ouvrages</span></a></li>
+			<li id="menu-active"><a href="<?php echo base_url().'param/region';?>"><span>Accueil</span></a></li> <!-- Active -->
+			<li><a href="<?php echo base_url() . 'projet/'; ?>"><span>Projets</span></a></li>
+			<li><a href="<?php echo base_url() . 'ouvrage_sources_em/'; ?>"><span>Ouvrages</span></a></li>
 			<li><a href="<?php echo base_url() . 'search/'; ?>"><span>Recherche</span></a></li>
-			<li><a href="#"><span>Imprimer</span></a></li>
+			<li><a href="<?php echo base_url() . 'panne/'; ?>"><span>Maintenance</span></a></li>
 			<?php if($this->ion_auth->is_admin()){?>
 				<li><a href="<?php echo base_url().'auth/'?>"><span>Utilisateurs</span></a></li>
 			<?php } ?>
-			<li><a href="#"><span>Parametrages</span></a></li>
+			<li><a href="<?php echo base_url().'param/'?>"><span>Parametrages</span></a></li>
 			<span style="float:right; font-weight:bold" id="date_heure"></span>
-			<script type="text/javascript">window.onload = date_heure('date_heure');</script>
+			<script type="text/javascript">//window.onload = date_heure('date_heure');</script>
 		</ul>
 
 	</div> <!-- /header -->

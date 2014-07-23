@@ -40,5 +40,10 @@ class Panne_model extends CI_Model {
 		$this->db->where('code_panne', $code_panne);
 		$this->db->delete($this->panne);
 	}
+		
+	function get_by_id($code_panne){
+		$this->db->where('code_panne', $code_panne);
+		 return $this->db->get($this->panne);
+	}
 }
 ?>

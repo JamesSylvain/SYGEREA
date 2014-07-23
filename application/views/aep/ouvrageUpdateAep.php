@@ -2,45 +2,34 @@
 <h1><?php if (isset($title)) echo $title; ?></h1>
 <?php if (isset($message)) echo $message; ?>
 <form method="post" action="<?php echo $action; ?>">
-<div class="data">
-    <fieldset> <legend>Ouvrage</legend>
+    <div class="data" style="display: inline;width: 50%;float: left">
+    <fieldset style="display: inline;width: 50%;float: left"> <legend>Ouvrage</legend>
 	<table>
                  <tr>
+                    <td valign="top">Localité<span style="color:red;">*</span></td>
+                    <td>
+                            <?php  
+                            $administration = $this->Param_model->get_administrationby_localite($this->form_data->code_de_la_localite->code_arrondissement)->row();
+                            echo $administration->nom_region.' -> ';    
+                            echo $administration->nom_dept.' -> ';    
+                            echo $administration->nom_arrondis.' -> ';    
+                            echo $this->form_data->code_de_la_localite->nom;
+                           ?>
+                    </td>
+                </tr> 
+                <tr>
                     <td valign="top">Entreprise <span style="color:red;">*</span></td>
                     <td>
-                        <select name="code_entreprise" >
-                            <?php if(($this->form_data->code_entreprise!=="")){  
-                                echo "<option value='".$this->form_data->code_entreprise->code_entreprise."' > ".$this->form_data->code_entreprise->nom_de_l_entreprise." </option>";
-                                echo "<option >  </option>";
-                            } else { ?>
-                                <option value='' > Choisir </option>
-                            <?php } ?>
-                            <?php            
-                            foreach ($entreprises as $entreprise)
-                            {
-                                echo "<option value='".$entreprise->code_entreprise."'>".$entreprise->nom_de_l_entreprise."</option>";
-                            }
-                                ?>
-                        </select>
+                       <?php
+                                echo $this->form_data->code_entreprise->nom_de_l_entreprise;
+                               ?>
                     </td>
                 </tr>
                 <tr>
                     <td valign="top">Projet<span style="color:red;">*</span></td>
-                    <td>
-                         <select name="code_projet" >
-                            <?php if(($this->form_data->code_projet!=="")){  
-                                echo "<option value='".$this->form_data->code_projet->code_projet."' > ".$this->form_data->code_projet->libelle_du_projet." </option>";
-                                echo "<option >  </option>";
-                            } else { ?>
-                                <option value='' > Choisir </option>
-                            <?php } ?>
-                            <?php            
-                            foreach ($projets as $projet)
-                            {
-                                echo "<option value='".$projet->code_projet."'>".$projet->libelle_du_projet."</option>";
-                            }
+                    <td><?php
+                        echo  $this->form_data->code_projet->libelle_du_projet;
                                 ?>
-                        </select>
                     </td>
                 </tr>
                 <tr>
@@ -72,13 +61,6 @@
                     </td>
                 </tr>
                 <tr>
-                    <td valign="top">Coordonnees en Z<span style="color:red;">*</span></td>
-                    <td>
-                        <input type="text" pattern="[-+]?[0-9]+(\.[0-9]+)?" name="coordonnees_en_z" class="inp-form" value="<?php echo set_value('coordonnees_en_z', $this->form_data->coordonnees_en_z); ?>"/>
-                        <?php echo form_error('coordonnees_en_z'); ?>
-                    </td>
-                </tr>
-                <tr>
                     <td valign="top">Etat de l'ouvrage<span style="color:red;">*</span></td>
                     <td>
                         <select name="etat_de_l_ouvrage" >
@@ -88,34 +70,18 @@
                             } else { ?>
                                 <option value='' > Choisir </option>
                             <?php } ?>
-                            <option value='Début' > Début </option>
-                            <option value='Milieu' > Milieu </option>
-                            <option value='Fin' > Fin </option>
+                            <option value='Fonctionnel' > Fonctionnel </option>
+                            <option value='Partiellement Ponctionnel' > Partiellement Fonctionnel </option>
+                            <option value='Non Fonctionnel' > Non Fonctionnel </option>
                         </select>    
                     </td>
                 </tr>
+                
                 </table>
         </fieldset>
-                <fieldset> <legend>Hydraulique</legend>
-                    <table>
-                        <tr>
-                        <td valign="top">Debit <span style="color:red;">*</span></td>
-                        <td>
-                            <input type="text" pattern="[-+]?[0-9]+(\.[0-9]+)?" name="debit" class="inp-form" value="<?php echo set_value('debit', $this->form_data->debit); ?>"/>
-                            <?php echo form_error('debit'); ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign="top">Perimetre de protection<span style="color:red;">*</span></td>
-                        <td>
-                            <input type="text" pattern="[-+]?[0-9]+(\.[0-9]+)?" name="perimetre_de_protection" class="inp-form" value="<?php echo set_value('perimetre_de_protection', $this->form_data->perimetre_de_protection); ?>"/>
-                            <?php echo form_error('perimetre_de_protection'); ?>
-                        </td>
-                    </tr>
-                    
-                    </table>    
-                </fieldset>
-                <fieldset> <legend>Ouvrage</legend>
+    </div>
+        <div class="data" style="display: inline;width: 50%;float: right">
+                <fieldset style="display: inline;width: 50%;float: right"> <legend>Aep</legend>
                     <table>
 			<tr>
 				<td valign="top">Profondeur<span style="color:red;">*</span></td>
@@ -162,8 +128,8 @@
 			<tr>
 				<td valign="top">Diametre de perforation<span style="color:red;">*</span></td>
                                 <td>
-                                    <input type="text" pattern="[-+]?[0-9]+(\.[0-9]+)?" name="diametre_de_perforation" class="inp-form" value="<?php echo set_value('diametre_de_perforation',$this->form_data->diametre_de_perforation); ?>"/>
-                                    <?php echo form_error('diametre_de_perforation'); ?>
+                                    <input type="text" pattern="[-+]?[0-9]+(\.[0-9]+)?" name="diametre" class="inp-form" value="<?php echo set_value('diametre',$this->form_data->diametre); ?>"/>
+                                    <?php echo form_error('diametre'); ?>
 				</td>
 			</tr>
 			<tr>
@@ -174,16 +140,31 @@
 				</td>
 			</tr>
 			<tr>
-                            <td valign="top">Type d'aep<span style="color:red;">*</span></td>
-                            <td>
-                                <input type="text" name="type_d_aep" class="inp-form" value="<?php echo set_value('type_d_aep', $this->form_data->type_d_aep); ?>"/>
-                                <?php echo form_error('type_d_aep'); ?>
-                            </td>
-                        </tr>
+				<td valign="top">Debit<span style="color:red;">*</span></td>
+                                <td>
+                                    <input type="text" pattern="[-+]?[0-9]+(\.[0-9]+)?" name="debit" class="inp-form" value="<?php echo set_value('debit',$this->form_data->debit); ?>"/>
+                                    <?php echo form_error('debit'); ?>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">Perimetre de protection<span style="color:red;">*</span></td>
+                                <td>
+                                    <input type="text" pattern="[-+]?[0-9]+(\.[0-9]+)?" name="perimetre_de_protection" class="inp-form" value="<?php echo set_value('perimetre_de_protection',$this->form_data->perimetre_de_protection); ?>"/>
+                                    <?php echo form_error('perimetre_de_protection'); ?>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">Type d'aep<span style="color:red;">*</span></td>
+                                <td>
+                                    <input type="text" name="type_d_aep" class="inp-form" value="<?php echo set_value('type_d_aep',$this->form_data->type_d_aep); ?>"/>
+                                    <?php echo form_error('type_d_aep'); ?>
+				</td>
+			</tr>
 			
 		</table>
                 </fieldset>
-                <input type="submit" name="enregistrer" value="Save"/>
+                 
+                <input type="submit" name="enregistrer" value="Enregistrer"/>
 		</div>
 		</form>
 		<br />

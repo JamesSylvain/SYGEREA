@@ -42,10 +42,6 @@
 				<td><?php echo $localites->coordonnees_en_y; ?></td>
 			</tr>			
 			<tr>
-				<td valign="top">Coordonnee en z </td>
-				<td><?php echo $localites->coordonnees_en_z; ?></td>
-			</tr>		
-			<tr>
 				<td valign="top">Nombres de Menages</td>
 				<td><?php echo $localites->nbre_de_menages; ?></td>
 			</tr>			

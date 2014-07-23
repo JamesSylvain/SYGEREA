@@ -2,33 +2,25 @@
 		<h1><?php echo $title; ?></h1>
 		<div class="data">
 		<fieldset>
-		<legend> Detail du departement <?php echo strtoupper($departements->libelle_departement); ?></legend>
+		<legend> Detail de la panne</legend>
 		<table>
 			<tr>
-				<td width="30%">Code Departement</td>
-				<td><?php echo $departements->code_region; ?></td>
+				<td width="30%">Code Panne</td>
+				<td><?php echo $panne->code_panne; ?></td>
 			</tr>
 			<tr>
-				<td valign="top">Nom  Departement</td>
-				<td><?php echo $departements->libelle_departement; ?></td>
+				<td valign="top">Ouvrage concerne </td>
+				<td><?php echo $panne->code_de_l_ouvrage; ?></td>
+			</tr>				
+			<tr>
+				<td valign="top">Description </td>
+				<td><?php echo $panne->libelle_panne; ?></td>
 			</tr>			
 			<tr>			
 			<tr>
-				<td valign="top">Nom  Region</td>
-				<td><?php echo $this->Param_model->getregionname($departements->code_region); ?></td>
+				<td valign="top">Date mise hors usage de l'ouvrage</td>
+				<td><?php echo $panne->date_mise_hors_usage; ?></td>
 			</tr>			
-			<tr>
-				<td valign="top">Superficie (km²)</td>
-				<td><?php echo $departements->superficie; ?></td>
-			</tr>			
-			<tr>
-				<td valign="top">Population</td>
-				<td><?php echo $departements->population; ?></td>
-			</tr>			
-			<tr>
-				<td valign="top">Taux d'accroissement</td>
-				<td><?php echo $departements->taux_d_acroissement_pop; ?></td>
-			</tr>
 		</table>
 		</fieldset>
 		</div>

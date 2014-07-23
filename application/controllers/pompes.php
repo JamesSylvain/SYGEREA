@@ -28,6 +28,11 @@ class Pompes extends CI_Controller {
 
         // load model
         $this->load->model('Model_generique', 'model', TRUE);
+        if (!$this->ion_auth->logged_in())
+        {
+                //redirect them to the login page
+                redirect('auth/login', 'refresh');
+        }
     }
 
     function index($offset = 0) {
@@ -94,7 +99,7 @@ class Pompes extends CI_Controller {
 
         $data['projets'] = $this->model->list_all('projet')->result();
         $data['ouvrages'] = $data['ouvrages'] = $this->model->getEntities('select ouvrage.* from forages_ou_puits,ouvrage where forages_ou_puits.code_de_l_ouvrage=ouvrage.code_de_l_ouvrage')->result();
-        $data['title'] = 'Modifier la pompe :';
+        $data['title'] = 'Modifier la pompe';
         //		$data['message'] = '';
         $data['action'] = site_url('pompes/update/' . $pompe->code_pompe);
         $data['link_back'] = anchor('pompes/index/', 'Back to list of projet', array('class' => 'back'));
@@ -163,7 +168,7 @@ class Pompes extends CI_Controller {
         $this->form_data->etat_de_la_pompe = "";
 
         $data['ouvrages'] = $this->model->getEntities('select ouvrage.* from forages_ou_puits,ouvrage where forages_ou_puits.code_de_l_ouvrage=ouvrage.code_de_l_ouvrage')->result();
-        $data['title'] = 'Nouvelle Pompe :';
+        $data['title'] = 'Nouvelle Pompe ';
         //		$data['message'] = '';
         $data['action'] = site_url('pompes/add/');
         $data['link_back'] = anchor('pompes/index/', 'Back to list of projet', array('class' => 'back'));
@@ -216,7 +221,7 @@ class Pompes extends CI_Controller {
 
     function view($id) {
         // set common properties
-        $data['title'] = ' Details';
+        $data['title'] = ' Details Pompe';
         $data['link_back'] = anchor('pompes/index/', 'Back to list of projet', array('class' => 'back'));
         $data['link_edit'] = anchor('pompes/update/' . $id, 'Update', array('class' => 'update'));
         // get param details
