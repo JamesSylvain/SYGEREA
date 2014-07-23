@@ -43,7 +43,7 @@ LAYOUT
 #menu ul li a:hover span, #menu ul li#menu-active a span {background-color:#FFF;}
 #menu ul li#menu-active a {color:#0085cc;}
 #menu ul.f-right a {color:#df0000;}
-#content {border:1px solid #afafaf; background:#fff;}
+#content {border:1px solid #afafaf; background:#fff;  min-height: 670px;}
 #footer {color:#707070;}
 #footer a {color:#707070;}
 #footer a:hover, #footer a:active, #footer a:focus {color:#303030;}
