@@ -88,7 +88,7 @@ class Auth extends CI_Controller {
 				);					
 				$this->save_login_attempt(1, $info);
 			//	$this->save_connect();
-				redirect('/param/region', 'refresh');
+				redirect('/ouvrage', 'refresh');
 			}
 			else
 			{

@@ -244,9 +244,9 @@ class Bailleur extends CI_Controller {
                     $type_bailleur = $value;
                 }
             }
-            $this->table->add_row(++$i, $finance->nom_bailleur, $type_bailleur, $finance->code_ouvrage, $finance->montant_financement, $finance->annee_financement, anchor('bailleur/view_finance/' . $finance->code_finance, 'details', array('class' => 'view')) . ' ' .
-                    anchor('bailleur/update_finance/' . $finance->code_finance, 'modifier', array('class' => 'update')) . ' ' .
-                    anchor('bailleur/delete_finance/' . $finance->code_finance, 'supprimer', array('class' => 'delete', 'onclick' => "return confirm('voulez vous supprimer ce financement?')"))
+            $this->table->add_row(++$i, $finance->nom_bailleur, $type_bailleur, $finance->code_ouvrage, $finance->montant_financement, $finance->annee_financement, anchor('bailleur/view_finance_ouvrage/' . $finance->code_finance, 'details', array('class' => 'view')) . ' ' .
+                    anchor('bailleur/update_finance_ouvrage/' . $finance->code_finance, 'modifier', array('class' => 'update')) . ' ' .
+                    anchor('bailleur/delete_finance_ouvrage/' . $finance->code_finance, 'supprimer', array('class' => 'delete', 'onclick' => "return confirm('voulez vous supprimer ce financement?')"))
             );
         }
         $data['table'] = $this->table->generate();
@@ -316,7 +316,6 @@ class Bailleur extends CI_Controller {
         // set empty default form field values
         $this->form_data = new stdclass;
         $this->form_data->code_bailleur = '';
-        $this->form_data->code_projet = '';
         $this->form_data->annee_financement = '';
         $this->form_data->montant_financement = '';
 
@@ -418,6 +417,25 @@ class Bailleur extends CI_Controller {
         // load view
 
         $this->template->layout('sidebar_projet', 'bailleur/financeView', $data);
+    }   
+
+	function view_finance_ouvrage($code_finance) {
+        $data['$id_fin_projet'] = 'submenu-active';
+        // set common properties
+        $data['title'] = 'Details du Financement ';
+
+        // get finance details
+        $data['finance'] = $finance = $this->Bailleur_model->get_by_code_finance_ouvrage($code_finance)->row();
+        $options = array(1 => 'Etat', 2 => 'Organisme international', 3 => 'ONG', 4 => 'Particuliers');
+
+        foreach ($options as $key => $value) {
+            if ($finance->type_bailleur == $key) {
+                $data['finance']->type_bailleur = $value;
+            }
+        }
+        // load view
+
+        $this->template->layout('sidebar_projet', 'bailleur/financeouvrageView', $data);
     }
 
     function update_finance($code_finance) {
@@ -471,6 +489,57 @@ class Bailleur extends CI_Controller {
         // load view
 
         $this->template->layout('sidebar_projet', 'bailleur/financeEdit', $data);
+    }    
+	
+	function update_finance_ouvrage($code_finance) {
+        $data['$id_fin_projet'] = 'submenu-active';
+        $finance = $this->Bailleur_model->get_by_code_finance_ouvrage($code_finance)->row();
+
+        // set empty default form field values
+        $this->form_data = new stdclass;
+        $this->form_data->code_bailleur = $finance->code_bailleur;
+        $this->form_data->code_projet = $finance->code_projet;
+        $this->form_data->annee_financement = $finance->annee_financement;
+        $this->form_data->montant_financement = $finance->montant_financement;
+
+        // set common properties
+        $data['title'] = 'Modifier ce Financement de projet :';
+        //		$data['message'] = '';
+        $data['action'] = site_url('bailleur/update_finance_ouvrage/' . $code_finance);
+        $data['bailleurs'] = $this->Bailleur_model->get_bailleurlist()->result();
+
+
+
+        if (isset($_POST['enregistrer'])) {
+
+
+            // set validation properties
+            $this->form_validation->set_rules('code_bailleur', 'Nom du bailleur', 'trim|required');
+            $this->form_validation->set_rules('montant_financement', 'Montant financement', 'trim|required');
+
+            //	$this->form_validation->set_message('required', '* Champ obligatoire');
+            // run validation
+            if ($this->form_validation->run() == FALSE) {
+
+                $data['message'] = 'les champs marques * sont obligatoire veuillez verifier votre formulaire!!';
+            } else {
+
+                // save data
+                $financer = array('code_bailleur' => $this->input->post('code_bailleur'),
+                    'annee_financement' => $this->input->post('annee_financement'),
+                    'montant_financement' => $this->input->post('montant_financement')
+                );
+
+                $this->Bailleur_model->update_finance($code_finance, $financer);
+                $this->session->set_flashdata('succes', 'financement modifier avec succes!!');
+                redirect('bailleur/financementOuvrage/');
+            }
+        } else {
+            
+        }
+        // load view
+
+        $this->template->layout('sidebar_projet', 'bailleur/financeouvrageEditdata', $data);
     }
 
     function delete_finance($code_finance) {
@@ -480,6 +549,15 @@ class Bailleur extends CI_Controller {
 
         // redirect to financement list page
         redirect('bailleur/financement/', 'refresh');
+    }    
+	
+	function delete_finance_ouvrage($code_finance) {
+
+        // delete financement
+        $this->Bailleur_model->delete_finance($code_finance);
+
+        // redirect to financement list page
+        redirect('bailleur/financementOuvrage/', 'refresh');
     }
 
 }

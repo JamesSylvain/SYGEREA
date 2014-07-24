@@ -13,8 +13,8 @@
 				<td><?php echo $finance->type_bailleur; ?></td>
 			</tr>
 			<tr>
-				<td valign="top">Projet</td>
-				<td><?php echo $finance->nom_projet; ?></td>
+				<td valign="top">Ouvrage</td>
+				<td><?php echo $finance->code_ouvrage; ?></td>
 			</tr>				
 			<tr>
 				<td valign="top">Montant Financment</td>

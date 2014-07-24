@@ -80,6 +80,15 @@ class Bailleur_model extends CI_Model {
 		$this->db->where('bailleur.code_bailleur = financer.code_bailleur and projet.code_projet = financer.code_projet');
 		$this->db->where('code_finance', $code_finance);
 		return $this->db->get();
+	}	
+	
+	function get_by_code_finance_ouvrage($code_finance){
+	
+		$this->db->select('financer.*, bailleur.denomination as nom_bailleur, bailleur.type_bailleur as type_bailleur, ouvrage.code_de_l_ouvrage as code_ouvrage');
+		$this->db->from('bailleur, financer, ouvrage');
+		$this->db->where('bailleur.code_bailleur = financer.code_bailleur and ouvrage.code_de_l_ouvrage = financer.code_ouvrage');
+		$this->db->where('code_finance', $code_finance);
+		return $this->db->get();
 	}
 	
 	function save($bailleur){
