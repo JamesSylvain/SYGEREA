@@ -189,8 +189,15 @@ class Auth extends CI_Controller {
 			);
 
 			//render
-			//$this->_render_page('auth/change_password', $this->data);
-			$this->template->layout('sidebar_admin', 'auth/change_password', $this->data);
+
+			if ($this->ion_auth->is_admin()) //remove this elseif if you want to enable this for non-admins
+			{
+				$this->template->layout('sidebar_admin', 'auth/change_password', $this->data);
+			}else{
+				$this->template->layout('sidebar_simpleuser', 'auth/change_password', $this->data);
+			
+			}
+
 		}
 		else
 		{
