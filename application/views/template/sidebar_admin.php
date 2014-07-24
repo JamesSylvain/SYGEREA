@@ -6,4 +6,5 @@
 	<li><a href="<?php echo base_url() . 'auth/historique_connexion/0'; ?>">Historique des tentatives</a></li>
 	<!--<li><a href="<?php echo base_url() . '#'; ?>">Historique des operations</a></li>-->
 	<li><a href="<?php echo base_url() . 'auth/user_online'; ?>">Utilisateurs en ligne</a></li>
+	<li><a href="<?php echo base_url() . 'auth/change_password'; ?>">Modifier mot de passe</a></li>
 </ul>

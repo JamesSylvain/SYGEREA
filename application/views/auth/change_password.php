@@ -1,25 +1,27 @@
-<h1><?php echo lang('change_password_heading');?></h1>
-
+<h3 class="tit"><?php echo lang('change_password_heading');?></h3>
 <div id="infoMessage"><?php echo $message;?></div>
-
+<fieldset>
+<legend>modifier votre mot de passe</legend>
 <?php echo form_open("auth/change_password");?>
+	<table class="nostyle">
+      <tr>
+            <td> <?php echo lang('change_password_old_password_label', 'old_password');?> </td>
+            <td><?php echo form_input($old_password);?></td>
+      </tr>
 
-      <p>
-            <?php echo lang('change_password_old_password_label', 'old_password');?> <br />
-            <?php echo form_input($old_password);?>
-      </p>
+      <tr>
+            <td><?php echo sprintf(lang('change_password_new_password_label'), $min_password_length);?></td>
+            <td><?php echo form_input($new_password);?><td>
+      </tr>      
+	  <tr>
+            <td> <?php echo lang('change_password_new_password_confirm_label', 'new_password_confirm');?></td>
+            <td><?php echo form_input($new_password_confirm);?><td>
+      </tr>
 
-      <p>
-            <label for="new_password"><?php echo sprintf(lang('change_password_new_password_label'), $min_password_length);?></label> <br />
-            <?php echo form_input($new_password);?>
-      </p>
+      <p></p>
+	  <tr><td style="width:150px;"></td><td><?php echo form_submit(array('name'=>'submit', 'value'=>lang('change_password_submit_btn'), 'class'=>'input-submit'));?></td></tr>
 
-      <p>
-            <?php echo lang('change_password_new_password_confirm_label', 'new_password_confirm');?> <br />
-            <?php echo form_input($new_password_confirm);?>
-      </p>
-
+	 </table>
       <?php echo form_input($user_id);?>
-      <p><?php echo form_submit('submit', lang('change_password_submit_btn'));?></p>
-
+</fieldset>
 <?php echo form_close();?>

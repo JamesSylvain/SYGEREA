@@ -54,10 +54,10 @@
 				</tr>					
 				<tr>
 					<td valign="top">Ouvrage :<span style="color:red;">*</span></td>
-					<td><select type="text"  name="code_ouvrage" class="input-text" id="ouvrage">
+					<td><select type="text"  name="code_de_l_ouvrage" class="input-text" id="ouvrage">
 							<option value="">-- Choisir un Ouvrage --</option>
 						   </select>
-						<?php echo form_error('code_ouvrage'); ?>
+						<?php echo form_error('code_de_l_ouvrage'); ?>
 					</td>
 				</tr>						
 			</table>

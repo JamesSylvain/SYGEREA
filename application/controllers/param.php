@@ -796,22 +796,21 @@ class Param extends CI_Controller {
 		// generate table data
 		$this->load->library('table');
 		$this->table->set_empty("&nbsp;");
-		$this->table->set_heading('No', 'Eau Traitee', 'Date de prelevement', 'Date d\'analyse', 'Saveur', 'Limpidite', 'Turbidite', 'Actions');
+		$this->table->set_heading('No', 'Ouvrage', 'Date de prelevement', 'Date d\'analyse', 'Saveur', 'Limpidite', 'Temperature', 'Actions');
 		$i = 0 + $offset;
 		foreach ($caract_eaus as $caract_eau)
 		{		
 
-			$this->table->add_row(++$i, $caract_eau->nom, $caract_eau->lieudit, $arrondissement_name, $adminstration[0]->nom_dept, $adminstration[0]->nom_region, $caract_eau->population_recensee,  $caract_eau->taux_de_croissance_de_la_populat, 
-				anchor('param/view/'.$caract_eau->code_caracteristique.'/carateristiques_eau/code_caracteristique',' ',array('class'=>'view')).' '.
-				anchor('param/updatelocalite/'.$caract_eau->code_caracteristique,' ',array('class'=>'update')).' '.
-				anchor('param/delete/'.$caract_eau->code_caracteristique,' ',array('class'=>'delete','onclick'=>"return confirm('Voulez vous supprimer cette caracteristique?')"))
+			$this->table->add_row(++$i, $caract_eau->code_de_l_ouvrage, $caract_eau->date_de_prelevement, $caract_eau->date_d_analyse, $caract_eau->saveur, $caract_eau->limpidite, $caract_eau->temperature,
+				anchor('param/view/'.$caract_eau->code_caracteristique.'/carateristiques_eau/code_caracteristique','details ',array('class'=>'view')).' '.
+				anchor('param/delete/'.$caract_eau->code_caracteristique,' supprimer',array('class'=>'delete','onclick'=>"return confirm('Voulez vous supprimer cette caracteristique?')"))
 			);
 		}
 		$data['table'] = $this->table->generate();
 		
 		// load view
 
-		$this->template->layout('sidebar_param', 'param/caract_eauxList', $data);
+		$this->template->layout('sidebar_param', 'param/carateristiques_eauList', $data);
 
 	}	
 
@@ -858,24 +857,31 @@ class Param extends CI_Controller {
 			
 		if(isset($_POST['enregistrer'])){
 			
-			var_dump($_POST);exit;
+		//	var_dump($_POST);exit;
 			// set validation properties
-			$this->form_validation->set_rules('nom_localite', 'Nom de la localite', 'trim|required');
-			$this->form_validation->set_rules('lieudit', 'Lieu dit', 'trim|required');
-			$this->form_validation->set_rules('code_arrondissement', 'Nom de l\'arrondissement', 'trim|required');
-			$this->form_validation->set_rules('code_region', 'Nom de la region', 'trim|required');
-			$this->form_validation->set_rules('code_departement', 'Nom du departement', 'trim|required');
-			$this->form_validation->set_rules('population_recensee', 'Population recensee', 'trim|required');
-			$this->form_validation->set_rules('date_recensement', 'Date du recensement', 'trim|required');
-			$this->form_validation->set_rules('taux_croissance', 'Taux de croissance', 'trim|required');
-			$this->form_validation->set_rules('coordonnees_en_x', 'Coordonnee en x', 'trim|required');
-			$this->form_validation->set_rules('coordonnees_en_y', 'Coordonnee en y', 'trim|required');
-			$this->form_validation->set_rules('coordonnees_en_z', 'Coordonnee en z', 'trim|required');
-			$this->form_validation->set_rules('nbre_de_menages', 'Nombre de menages', 'trim|required');
-			$this->form_validation->set_rules('nbre_d_ecole', 'Nombre d\'ecole', 'trim|required');
-			$this->form_validation->set_rules('nbre_de_centre_de_sante', 'Nombre de centre de sante', 'trim|required');
-			$this->form_validation->set_rules('nbre_d_hopitaux', 'Nombre d\'hopitaux', 'trim|required');
-			$this->form_validation->set_rules('nbre_de_lieux_de_culte', 'Nombre de lieux de cultes', 'trim|required');
+			$this->form_validation->set_rules('code_de_l_ouvrage', 'Code de l\'ouvrage', 'trim|required');
+			$this->form_validation->set_rules('turbidite', 'turbidite', 'trim|required');
+			$this->form_validation->set_rules('temperature', 'temperature', 'trim|required');
+			$this->form_validation->set_rules('conductivite', 'conductivite', 'trim|required');
+			$this->form_validation->set_rules('matieres_organiques', 'matieres_organiques', 'trim|required');
+			$this->form_validation->set_rules('mineralisation', 'mineralisation', 'trim|required');
+			$this->form_validation->set_rules('ph', 'ph', 'trim|required');
+			$this->form_validation->set_rules('eau_traitee', 'eau traitee', 'trim|required');
+			$this->form_validation->set_rules('date_de_prelevement', 'Date de prelevement', 'trim|required');
+			$this->form_validation->set_rules('date_d_analyse', 'Date d\'analyse', 'trim|required');
+			$this->form_validation->set_rules('saveur', 'saveur', 'trim|required');
+			$this->form_validation->set_rules('limpidite', 'limpidite', 'trim|required');
+			$this->form_validation->set_rules('k', 'potassium', 'trim|required');
+			$this->form_validation->set_rules('nh4', 'nh4', 'trim|required');
+			$this->form_validation->set_rules('fe', 'fer', 'trim|required');
+			$this->form_validation->set_rules('mn', 'mn', 'trim|required');
+			$this->form_validation->set_rules('co3', 'co3', 'trim|required');
+			$this->form_validation->set_rules('so4', 'so4', 'trim|required');
+			$this->form_validation->set_rules('f', 'Fluor', 'trim|required');
+			$this->form_validation->set_rules('hco3', 'hco3', 'trim|required');
+			$this->form_validation->set_rules('co2_dissous', 'co2 dissous', 'trim|required');
+			$this->form_validation->set_rules('o2_dissous', 'o2 dissouss', 'trim|required');
+			$this->form_validation->set_rules('silice', 'silice', 'trim|required');
 
 		//	$this->form_validation->set_message('required', '* Champ obligatoire');
 			
@@ -890,24 +896,33 @@ class Param extends CI_Controller {
 			//	var_dump($_POST);exit;
 
 				// save data                    
-				$localite = array('nom' => $this->input->post('nom_localite'),
-										'code_arrondissement' => $this->input->post('code_arrondissement'),
-										'lieudit' => $this->input->post('lieudit'),
-										'population_recensee' => $this->input->post('population_recensee'),
-										'annee_recensement_population' => $this->input->post('date_recensement'),
-										'taux_de_croissance_de_la_populat' => $this->input->post('taux_croissance'),
-										'nbre_de_menages' => $this->input->post('nbre_de_menages'),
-										'coordonnees_en_x' => $this->input->post('coordonnees_en_x'),
-										'coordonnees_en_y' => $this->input->post('coordonnees_en_y'),
-										'coordonnees_en_z' => $this->input->post('coordonnees_en_z'),
-										'nbre_d_ecole' => $this->input->post('nbre_d_ecole'),
-										'nbre_de_centre_de_sante' => $this->input->post('nbre_de_centre_de_sante'),
-										'nbre_d_hopitaux' => $this->input->post('nbre_d_hopitaux'),
-										'nbre_de_lieux_de_culte' => $this->input->post('nbre_de_lieux_de_culte')
+				$localite = array('code_de_l_ouvrage' => $this->input->post('code_de_l_ouvrage'),
+										'turbidite' => $this->input->post('turbidite'),
+										'temperature' => $this->input->post('temperature'),
+										'conductivite' => $this->input->post('conductivite'),
+										'matieres_organiques' => $this->input->post('matieres_organiques'),
+										'mineralisation' => $this->input->post('mineralisation'),
+										'ph' => $this->input->post('ph'),
+										'eau_traitee' => $this->input->post('eau_traitee'),
+										'date_de_prelevement' => $this->input->post('date_de_prelevement'),
+										'date_d_analyse' => $this->input->post('date_d_analyse'),
+										'saveur' => $this->input->post('saveur'),
+										'limpidite' => $this->input->post('limpidite'),
+										'k' => $this->input->post('k'),
+										'nh4' => $this->input->post('nh4'),
+										'fe' => $this->input->post('fe'),
+										'mn' => $this->input->post('mn'),
+										'co3' => $this->input->post('co3'),
+										'so4' => $this->input->post('so4'),
+										'f' => $this->input->post('f'),
+										'hco3' => $this->input->post('hco3'),
+										'co2_dissous' => $this->input->post('co2_dissous'),
+										'o2_dissous' => $this->input->post('o2_dissous'),
+										'silice' => $this->input->post('silice')
 										);
 										
 				$idlocalite = $this->Param_model->save($table, $localite);				
-				$this->session->set_flashdata('succes', 'localite enregistre avec succes!!');
+				$this->session->set_flashdata('succes', 'caracteristique eau  enregistre avec succes!!');
 				redirect('param/caract_eaux/');
 
 			}
@@ -916,7 +931,7 @@ class Param extends CI_Controller {
 		}
 		// load view
 		
-		$this->template->layout('sidebar_param', 'param/caract_eauxEdit', $data);
+		$this->template->layout('sidebar_param', 'param/carateristiques_eauEdit', $data);
 		
 	}		
 	
@@ -947,7 +962,7 @@ class Param extends CI_Controller {
 		// set common properties
 		$data['title'] = 'Modifier cette localite :';
 		//		$data['message'] = '';
-		$data['action'] = site_url('param/updatelocalite/'.$code_localite);
+		$data['action'] = site_url('param/updatecaract_eaux/'.$code_localite);
 		$data['arrondissements'] = $this->Param_model->get_arrondissementlist()->result();
 		
 			
@@ -1010,7 +1025,7 @@ class Param extends CI_Controller {
 		}
 		// load view
 		
-		$this->template->layout('sidebar_param', 'param/localitesEdit', $data);
+		$this->template->layout('sidebar_param', 'param/caract_eauxEdit', $data);
 		
 	}
 	///////////////////////// fin de la  gestion des caract_eaux//////////////////////////////////////////////////////////////////////////////////////////////////////////		
@@ -1028,7 +1043,9 @@ class Param extends CI_Controller {
 		// load view
 		
 		$this->template->layout('sidebar_param', 'param/'.$element.'View', $data);
-	}
+	}	
+	
+	
 	function delete($id, $table, $element, $name_code)
 	{
 		// delete param

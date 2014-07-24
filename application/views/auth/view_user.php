@@ -39,6 +39,9 @@
 			<tr>
 				<td width="30%">Derniere connexion</td>
 				<td><?php echo date("Y-m-d H:i:s", $user->last_login); ?></td>
+			</tr>				
+			<tr>
+				<td colspan="2"><a href="<?php echo base_url() . 'auth/change_password'; ?>">Modifier mot de passe</a></td>
 			</tr>		
 		</table>
 		</fieldset>
