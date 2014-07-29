@@ -136,7 +136,7 @@
                                 <option value='' > Choisir </option>
                             <?php } ?>
                             <option value='Fonctionnel' > Fonctionnel </option>
-                            <option value='Partiellement Ponctionnel' > Partiellement Fonctionnel </option>
+                            <option value='Partiellement Fonctionnel' > Partiellement Fonctionnel </option>
                             <option value='Non Fonctionnel' > Non Fonctionnel </option>
                         </select>    
                     </td>

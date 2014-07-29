@@ -1,8 +1,8 @@
 <div class="content">
 	<h3 class="tit"><?php echo $title; ?></h3>
-	<?php if(isset($message)){?>
-	<h4><p class="msg error"> <?php echo $message; ?></p></h4>
-	<?php  } ?>
+<?php  $message = $this->session->flashdata('message'); if(isset($message)&&$message!=''){?>
+<h4><p class="msg warning"> <?php echo $message; ?></p></h4>
+<?php  } ?>
 	<form method="post" action="<?php echo $action; ?>" enctype="multipart/form-data">
 		<fieldset>
 			<legend>Rechercher ouvrages</legend>
@@ -54,20 +54,20 @@
 							<option value="hydrau" disabled>OUVRAGE HYROLIQUE</option>
 							<option value="1">Sources amenagees </option>
 							<option value="2">Forages ou puits</option>
-							<option value="3">Bornes fontaines </option>
+						<!--	<option value="3">Bornes fontaines </option>-->
 							<option value="4">Adductions en eau potable</option>
 							<option value="assain" disabled>OUVRAGE D'ASSAINISSEMENT</option>
 							<option value="5">Stations d'epurations</option>
-							<option value="6">Puissards</option>
+							<option value="6">Puisards</option>
 							<option value="7">Latrines</option>
 						   </select>
 					</td>
 					<td valign="top">Etat de l'ouvrage :<span style="color:red;">*</span></td>
 					<td><select type="text"  name="etat_ouvrage" class="input-text">
 							<option value="">-- Choisir un etat --</option>
-							<option value="1">Fonctionnel</option>
-							<option value="2">Partiellement fonctionnel</option>
-							<option value="3">Non fonctionnel</option>
+							<option value="Fonctionnel">Fonctionnel</option>
+							<option value="Partiellement Fonctionnel">Partiellement Fonctionnel</option>
+							<option value="Non fonctionnel">Non fonctionnel</option>
 						   </select>
 					</td>
 				</tr>						
