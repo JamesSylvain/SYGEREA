@@ -32,7 +32,7 @@ class Panne extends CI_Controller {
 		$offset = $this->uri->segment($uri_segment);
 		
 		// load data
-		$persons = $this->Panne_model->get_paged_list($this->limit, $offset)->result();
+		$pannes = $this->Panne_model->get_paged_list($this->limit, $offset)->result();
 		
 		// generate pagination
 		$this->load->library('pagination');
@@ -48,7 +48,7 @@ class Panne extends CI_Controller {
 		$this->table->set_empty("&nbsp;");
 		$this->table->set_heading('No', 'Code Ouvrage', 'Localite', 'Description de la panne', 'Date mise hors usage',  'Actions');
 		$i = 0 + $offset;
-		foreach ($persons as $panne)
+		foreach ($pannes as $panne)
 		{
 			 $administration = 'xxxxx';
 			$this->table->add_row(++$i, $panne->code_de_l_ouvrage,  $administration,  $panne->libelle_panne,  $panne->date_mise_hors_usage, 
@@ -175,7 +175,7 @@ class Panne extends CI_Controller {
 			else
 			{
 				// save data
-					$panne = array('code_de_l_ouvrage' => $this->input->post('code_ouvrage'),
+					$panne = array('code_panne' => $this->input->post('code_panne'),
 											'libelle_panne' => $this->input->post('libelle_panne'),
 											'date_mise_hors_usage' => $this->input->post('date_mise_hors_usage')
 											);

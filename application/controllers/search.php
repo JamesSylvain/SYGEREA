@@ -78,9 +78,49 @@ class Search extends CI_Controller {
 
 	}
 	
-	function searchOuvrage(){
+	function searchPanne(){
+		$data['title'] = 'Rechercher Pannes';
+		$data['action'] = site_url('search/searchPanne/');
+		$data['regions'] = $this->Param_model->get_regionlist()->result();
 	
-	
+		if(isset($_POST['enregistrer'])){
+			if(empty($_POST['code_ouvrage']) && empty($_POST['type_ouvrage']) && empty($_POST['code_localite']) && empty($_POST['code_arrondissement']) && empty($_POST['code_departement']) && empty($_POST['code_region'])){
+				$this->session->set_flashdata('message', 'veuillez choisir au moins un critere de recherche!!!');
+				redirect('search/searchPanne/');
+			}else{
+				
+				$pannes = $this->Search_model->search_pannes($_POST);	
+			//	var_dump($pannes);exit;
+				$data['title'] = 'Resultat de la recherche';
+		
+				if(count($pannes)>0){		
+								// generate table data
+					$this->load->library('table');
+					$this->table->set_empty("&nbsp;");
+					$this->table->set_heading('No', 'Code Ouvrage', 'Localite', 'Description de la panne', 'Date mise hors usage',  'Actions');
+					$i = 0;
+					foreach ($pannes as $panne)
+					{
+						 $administration = 'xxxxx';
+						$this->table->add_row(++$i, $panne->code_de_l_ouvrage,  $administration,  $panne->libelle_panne,  $panne->date_mise_hors_usage, 
+							anchor('panne/view/'.$panne->code_panne,'+ de details',array('class'=>'view'))
+						);
+					}
+					$data['table'] = $this->table->generate();
+
+				 $data['link'] = anchor('search/searchPanne/','Faire une autre recherche',array('class'=>'search'));
+				}else{
+					$data['table'] = '<br /><br /><strong>Pas de resultat !!</strong>';
+					$data['link'] = anchor('search/searchPanne/','Faire une autre recherche',array('class'=>'search'));
+				}
+				// load view
+				$this->template->layout('sidebar_search', 'search/ouvrage_result', $data);
+				
+			}
+		
+		}
+
+		$this->template->layout('sidebar_search', 'search/searchPanne', $data);
 	}
 	
 }
